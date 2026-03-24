@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siap Juara Soft Tenis</title>
+    <style>
+        /* CSS Dasar & Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;}
+        
+        /* Navigasi */
+        nav { background-color: #2c3e50; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        nav h1 { font-size: 1.5rem; margin: 0; }
+        
+        /* Menu Links Default (Desktop) */
+        nav ul { list-style: none; display: flex; gap: 1rem; transition: all 0.3s ease; }
+        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; transition: background 0.3s; display: block;}
+        nav a:hover, nav a.active { background-color: #34495e; }
+
+        /* Tombol Hamburger (Disembunyikan di Desktop) */
+        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
+        .menu-toggle span { display: block; width: 25px; height: 3px; background-color: white; border-radius: 3px; transition: 0.3s; }
+
+        /* Responsive Design (Mobile & Tablet) */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #2c3e50;
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+
+            nav ul.show { display: flex; }
+            nav ul li { text-align: center; margin-bottom: 0.5rem; }
+            nav a { padding: 1rem; border-radius: 0; }
+            nav a:hover, nav a.active { background-color: #1a252f; }
+        }
+
+        /* Container & Section */
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; flex: 1; width: 100%;}
+        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Card Box Style */
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        .card h2 { color: #2c3e50; margin-bottom: 1rem; border-bottom: 2px solid #ecf0f1; padding-bottom: 0.5rem; }
+
+        /* Jumbotron */
+        .jumbotron { background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 3rem 2rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; }
+        .jumbotron h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .jumbotron p { font-size: 1.1rem; opacity: 0.9; }
+        @media (max-width: 768px) { .jumbotron { padding: 2rem 1rem; } .jumbotron h1 { font-size: 2rem; } }
+
+        /* Tombol */
+        .btn { display: inline-block; background: #e67e22; color: white; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 4px; font-weight: bold; cursor: pointer; border: none; transition: background 0.3s; text-align: center;}
+        .btn:hover { background: #d35400; }
+
+        /* Grid Materi */
+        .materi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+        .materi-item { background: white; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
+        .materi-item:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); border-color: #3498db;}
+        .materi-item h3 { color: #2980b9; margin-bottom: 0.5rem; }
+
+        /* Placeholder Iframe */
+        .iframe-placeholder { width: 100%; height: 400px; background: #ecf0f1; border: 2px dashed #bdc3c7; display: flex; justify-content: center; align-items: center; color: #7f8c8d; font-weight: bold; border-radius: 8px; text-align: center; padding: 1rem;}
+        @media (max-width: 768px) { .iframe-placeholder { height: 300px; } }
+
+        /* Footer */
+        footer { background: #2c3e50; color: white; text-align: center; padding: 1.5rem; width: 100%; margin-top: auto;}
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>Siap Juara</h1>
+        <div class="menu-toggle" id="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul id="nav-links">
+            <li><a data-target="beranda" class="active">Beranda</a></li>
+            <li><a data-target="materi">Materi</a></li>
+            <li><a data-target="form-latihan">Form Latihan</a></li>
+            <li><a data-target="grafik">Grafik Latihan</a></li>
+            <li><a data-target="feedback">Feedback</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div id="beranda" class="section active">
+            <div class="jumbotron">
+                <h1>Siap Juara Soft Tenis</h1>
+                <p>Mempersiapkan atlet usia 15-18 tahun ke tingkat prestasi utama melalui program latihan terstruktur.</p>
+            </div>
+
+            <div class="card">
+                <h2>Tujuan Aplikasi</h2>
+                <p>Menciptakan sebuah sistem pembinaan yang terintegrasi dan berkelanjutan guna meningkatkan kualitas performa atlet Soft Tenis remaja (usia 15-18 tahun) di Jawa Barat, sehingga mampu bersaing secara kompetitif dan meraih prestasi maksimal pada ajang PORPROV Jawa Barat 2026.</p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <h2>Mulai Latihan Mandiri</h2>
+                <p style="margin-bottom: 1rem;">Pelajari teknik dasar, persiapan fisik, dan simulasi pertandingan untuk mencapai peak performance.</p>
+                <button class="btn" onclick="navigateTo('materi')">Lihat Daftar Materi</button>
+            </div>
+
+            <div class="card">
+                <h2>Pantauan Grafik Latihan</h2>
+                <div class="iframe-placeholder">
+                    [Area Embed Google Sheets / Looker Studio]
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Feedback Evaluasi Terbaru</h2>
+                <div class="iframe-placeholder">
+                    [Area Embed Laporan Google Forms / Sheets]
+                </div>
+            </div>
+        </div>
+
+        <div id="materi" class="section">
+            <div class="card">
+                <h2>Materi Soft Tenis</h2>
+                <div id="materi-list" class="materi-grid"></div>
+                
+                <div id="materi-detail" style="display: none; margin-top: 1rem;">
+                    <button class="btn" onclick="kembaliKeDaftarMateri()" style="margin-bottom: 1rem; background: #95a5a6;">&larr; Kembali</button>
+                    <h3 id="detail-judul" style="color: #2c3e50; font-size: 1.5rem; border-bottom: 2px solid #ecf0f1; padding-bottom: 0.5rem; margin-bottom: 1rem;"></h3>
+                    <div id="detail-konten" style="line-height: 1.8;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-latihan" class="section">
+            <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+                <h2>Formulir Latihan</h2>
+                <p style="margin-bottom: 2rem; font-size: 1.1rem;">Berikut Anda akan dialihkan ke Halaman Form untuk mengisi Latihan.</p>
+                <a href="#" target="_blank" class="btn" style="background: #27ae60; font-size: 1.1rem; padding: 1rem 2rem;">Menuju Form Latihan &rarr;</a>
+            </div>
+        </div>
+
+        <div id="grafik" class="section">
+            <div class="card">
+                <h2>Grafik Perkembangan Atlet</h2>
+                <p>Data rekam jejak prestasi dan kondisi fisik atlet yang berguna untuk pemetaan performa.</p>
+                <div class="iframe-placeholder" style="height: 600px;">
+                    [Embed Grafik Utama Google Sheets Di Sini]
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback" class="section">
+            <div class="card" style="text-align: center;">
+                <h2>Formulir Umpan Balik</h2>
+                <p style="margin-bottom: 1.5rem;">Silakan isi angket atlet di bawah ini. Umpan balik Anda sangat penting agar program latihan dapat terus dievaluasi dan diadaptasi sesuai dengan kebutuhan Anda di lapangan.</p>
+                <a href="#" target="_blank" class="btn" style="background: #2980b9; padding: 0.8rem 2rem;">Isi Form Angket Atlet</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Pemilik Proyek: Ahmad Dhani Rohiyat, S. Pd</p>
+    </footer>
+
+    <script>
+        // Data JSON Materi
+        const dataMateri = [
+            {
+                id: 1,
+                judul: "1. Teknik Dasar",
+                deskripsiSingkat: "Penguasaan fundamental pukulan seperti forehand, backhand, dan servis.",
+                konten: `
+                    <p>Teknik dasar merupakan kemampuan fundamental yang harus dikuasai oleh setiap atlet soft tenis. Beberapa teknik dasar yang penting dalam permainan soft tenis antara lain: <strong>Forehand, Backhand, Servis, Volley, dan Smash</strong>.</p>
+                    <p>Latihan teknik ini difokuskan pada peningkatan akurasi dan variasi pukulan (seperti <em>twist serve</em>, <em>topspin drive</em>, dan <em>cutting slice</em>) yang disesuaikan dengan karakteristik elastisitas bola soft tenis. Metode pelaksanaannya menggunakan <em>drill</em> teknik berulang.</p>
+                `
+            },
+            {
+                id: 2,
+                judul: "2. Latihan Fisik",
+                deskripsiSingkat: "Peningkatan daya tahan kardiovaskular, kelincahan, dan kekuatan eksplosif.",
+                konten: `
+                    <p>Optimalisasi fisik dilakukan melalui program <em>progressive overload</em> yang berfokus pada peningkatan daya tahan kardiovaskular, kelincahan (<em>agility</em>), dan kekuatan ekslosif otot tungkai.</p>
+                    <p>Beberapa metode latihan fisik yang diterapkan meliputi:</p>
+                    <ul>
+                        <li><em>Continuous running</em>, <em>interval training</em>, dan <em>circuit training</em> untuk meningkatkan kapasitas jantung-paru dan kekuatan otot umum.</li>
+                        <li><em>Plyometric training</em>, <em>agility ladder</em>, dan <em>cone drill</em> untuk melatih kelincahan dan reaksi cepat.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 3,
+                judul: "3. Latih Tanding & Mental",
+                deskripsiSingkat: "Simulasi pertandingan, uji tanding, dan ketahanan psikologis.",
+                konten: `
+                    <p>Fokus latihan dialihkan pada latihan berbasis pertandingan (<em>match play</em> dominan) dengan penekanan pada kecepatan, reaksi, dan strategi. Metode yang digunakan meliputi <em>try out</em>, simulasi pertandingan penuh, dan uji tanding.</p>
+                    <p>Tahap ini sangat penting untuk membangun ketahanan psikologis atlet. Latihan mental seperti visualisasi dan kontrol emosi diintegrasikan agar atlet mampu melakukan regulasi emosi, menjaga fokus, dan memiliki kepercayaan diri tinggi saat menghadapi situasi tertekan di lapangan.</p>
+                `
+            }
+        ];
+
+        // --- Logika Menu Mobile (Hamburger) ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navUl = document.getElementById('nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navUl.classList.toggle('show');
+        });
+
+        // Menutup menu saat klik di luar
+        document.addEventListener('click', function(event) {
+            const isClickInsideMenu = navUl.contains(event.target);
+            const isClickOnButton = mobileMenuBtn.contains(event.target);
+
+            if (!isClickInsideMenu && !isClickOnButton && navUl.classList.contains('show')) {
+                navUl.classList.remove('show');
+            }
+        });
+
+        // --- Logika Navigasi SPA ---
+        const navLinks = document.querySelectorAll('#nav-links a');
+        const sections = document.querySelectorAll('.section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-target');
+                navigateTo(target);
+                
+                if (window.innerWidth <= 768) {
+                    navUl.classList.remove('show');
+                }
+            });
+        });
+
+        function navigateTo(targetId) {
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-target') === targetId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            sections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            if(targetId === 'materi') {
+                kembaliKeDaftarMateri();
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- Logika Render Materi JSON ---
+        const materiListContainer = document.getElementById('materi-list');
+        const materiDetailContainer = document.getElementById('materi-detail');
+
+        function renderDaftarMateri() {
+            materiListContainer.innerHTML = '';
+            dataMateri.forEach(materi => {
+                const card = document.createElement('div');
+                card.className = 'materi-item';
+                card.innerHTML = `
+                    <h3>${materi.judul}</h3>
+                    <p>${materi.deskripsiSingkat}</p>
+                `;
+                card.onclick = () => tampilkanDetailMateri(materi.id);
+                materiListContainer.appendChild(card);
+            });
+        }
+
+        function tampilkanDetailMateri(id) {
+            const materi = dataMateri.find(m => m.id === id);
+            if(materi) {
+                document.getElementById('detail-judul').innerText = materi.judul;
+                document.getElementById('detail-konten').innerHTML = materi.konten;
+                
+                materiListContainer.style.display = 'none';
+                materiDetailContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    materiDetailContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        function kembaliKeDaftarMateri() {
+            materiListContainer.style.display = 'grid';
+            materiDetailContainer.style.display = 'none';
+        }
+
+        // Inisialisasi
+        renderDaftarMateri();
+    </script>
+</body>
+</html>
