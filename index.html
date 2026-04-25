@@ -8,11 +8,11 @@
         /* CSS Dasar & Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7f6; color: #333; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;}
-        
+
         /* Navigasi */
         nav { background-color: #2c3e50; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
         nav h1 { font-size: 1.5rem; margin: 0; }
-        
+
         /* Menu Links Default (Desktop) */
         nav ul { list-style: none; display: flex; gap: 1rem; transition: all 0.3s ease; }
         nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; transition: background 0.3s; display: block;}
@@ -65,14 +65,369 @@
 
         /* Grid */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        
+
         .materi-item { background: white; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
         .materi-item:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); border-color: #3498db;}
         .materi-item h3 { color: #2980b9; margin-bottom: 0.5rem; }
 
         /* Placeholder Iframe */
         .iframe-placeholder { width: 100%; background: transparent; border: none; display: flex; justify-content: center; align-items: center; color: #7f8c8d; font-weight: bold; border-radius: 8px; text-align: center; padding: 1rem;}
-        
+
+        /* Kalender Latihan */
+        .training-calendar-wrapper {
+            width: 100%;
+            max-width: 968px;
+            margin: 0 auto;
+            color: #1f2937;
+        }
+
+        .training-calendar-panel {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .training-calendar-panel h3 {
+            margin: 0 0 12px;
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .training-controls {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .training-controls label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #6b7280;
+        }
+
+        .training-controls input,
+        .training-controls select,
+        .training-controls button {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .training-controls button,
+        .calendar-nav button,
+        .training-modal .close-btn {
+            cursor: pointer;
+            border: none;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .training-controls button:hover,
+        .calendar-nav button:hover:not(:disabled),
+        .training-modal .close-btn:hover {
+            filter: brightness(0.95);
+            transform: translateY(-1px);
+        }
+
+        .calendar-nav button:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            transform: none;
+            filter: none;
+        }
+
+        .training-controls .secondary {
+            background: #16a34a;
+        }
+
+        .calendar-shell {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .calendar-nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 14px 16px;
+            background: #111827;
+            color: white;
+        }
+
+        .calendar-nav.bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .calendar-nav button {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        .calendar-nav button:first-child {
+            justify-self: start;
+        }
+
+        .calendar-nav button:last-child {
+            justify-self: end;
+        }
+
+        .calendar-month-title {
+            margin: 0;
+            font-size: clamp(18px, 3vw, 22px);
+            text-align: center;
+            color: white;
+        }
+
+        .training-weekday-row,
+        .training-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+
+        .training-weekday-row div {
+            padding: 10px 4px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: bold;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .training-day-cell {
+            min-height: 88px;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 8px;
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .training-day-cell:nth-child(7n) {
+            border-right: none;
+        }
+
+        .training-day-cell.empty {
+            background: #f9fafb;
+        }
+
+        .training-date-number {
+            font-size: 13px;
+            font-weight: bold;
+            color: #6b7280;
+            position: relative;
+            z-index: 1;
+        }
+
+        .training-day-active {
+            background: #dbeafe;
+            cursor: pointer;
+        }
+
+        .training-day-active:hover {
+            outline: 2px solid #2563eb;
+            z-index: 2;
+        }
+
+        .training-badge {
+            margin-top: 8px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: inherit;
+            background: #2563eb;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.25;
+            padding: 6px;
+        }
+
+        .training-special-badge {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 7px;
+            border-radius: 8px;
+            background: #16a34a;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .training-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 200;
+        }
+
+        .training-modal-backdrop.active {
+            display: flex;
+        }
+
+        .training-modal {
+            width: min(560px, 100%);
+            max-height: min(90vh, 720px);
+            overflow: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            padding: 22px;
+        }
+
+        .training-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .training-modal h3 {
+            margin: 0;
+            font-size: 22px;
+            color: #1f2937;
+        }
+
+        .training-modal .close-btn {
+            width: auto;
+            padding: 8px 12px;
+            background: #374151;
+            border-radius: 12px;
+        }
+
+        .training-detail {
+            line-height: 1.6;
+        }
+
+        .training-detail strong {
+            color: #2563eb;
+        }
+
+        .training-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .training-legend span::before {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 6px;
+            vertical-align: -1px;
+            background: #dbeafe;
+            border: 1px solid #2563eb;
+        }
+
+        .training-legend span.special::before {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+
+        @media (max-width: 760px) {
+            .training-controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .training-controls .button-area {
+                grid-column: 1 / -1;
+            }
+
+            .calendar-nav {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-nav button,
+            .calendar-nav button:first-child,
+            .calendar-nav button:last-child {
+                justify-self: stretch;
+            }
+
+            .calendar-month-title {
+                order: -1;
+            }
+
+            .training-day-cell {
+                min-height: 72px;
+                padding: 6px;
+            }
+
+            .training-badge {
+                font-size: 10px;
+                padding: 4px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .training-calendar-panel {
+                padding: 14px;
+            }
+
+            .training-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .training-weekday-row div {
+                font-size: 11px;
+            }
+
+            .training-day-cell {
+                min-height: 58px;
+                padding: 5px;
+                border-radius: 8px;
+            }
+
+            .training-date-number {
+                font-size: 11px;
+            }
+
+            .training-badge {
+                margin-top: 4px;
+                font-size: 8px;
+                line-height: 1.15;
+            }
+
+            .training-special-badge {
+                font-size: 8px;
+                padding: 3px 5px;
+            }
+        }
+
         /* Footer */
         footer { background: #2c3e50; color: white; text-align: center; padding: 1.5rem; width: 100%; margin-top: auto;}
     </style>
@@ -99,11 +454,66 @@
                 <h1>Penetapan Program Latihan Soft Tenis Pada Atlet Usia 15 - 18 Menuju Kejuaraan Proprov Jawa Barat 2026 Dengan Pemanfaatan Googlesite</h1>
                 <p>Mempersiapkan atlet usia 15-18 tahun ke tingkat prestasi utama melalui program latihan terstruktur.</p>
             </div>
+
             <div class="card" style="text-align: center;">
                 <h2>Mulai Latihan Mandiri</h2>
                 <p style="margin-bottom: 1rem;">Pelajari teknik dasar, persiapan fisik, dan simulasi pertandingan untuk mencapai peak performance.</p>
                 <button class="btn" onclick="navigateTo('materi')">Lihat Daftar Materi</button>
             </div>
+
+            <div class="card">
+                <h2>Kalender Latihan Soft Tenis</h2>
+
+                <div class="training-calendar-wrapper">
+                    <div class="training-calendar-panel">
+                        <h3>Tambah Tanggal Latihan / Variasi Latihan Khusus</h3>
+
+                        <div class="training-controls">
+                            <div>
+                                <label for="specialDate">Tanggal Latihan</label>
+                                <input type="date" id="specialDate" min="2026-05-01" max="2026-10-31" />
+                            </div>
+
+                            <div>
+                                <label for="specialTraining">Pilih Variasi Latihan</label>
+                                <select id="specialTraining"></select>
+                            </div>
+
+                            <div>
+                                <label for="specialNote">Catatan Khusus</label>
+                                <input type="text" id="specialNote" placeholder="Contoh: simulasi pertandingan" />
+                            </div>
+
+                            <div class="button-area">
+                                <button class="secondary" onclick="addSpecialTrainingDate()">Tambah</button>
+                            </div>
+                        </div>
+
+                        <div class="training-legend">
+                            <span>Latihan rutin Rabu/Minggu</span>
+                            <span class="special">Latihan khusus/tambahan</span>
+                        </div>
+                    </div>
+
+                    <section class="calendar-shell">
+                        <div class="calendar-nav">
+                            <button id="prevMonthBtnTop" type="button" onclick="goToPreviousMonth()">← Bulan Sebelumnya</button>
+                            <h3 id="activeMonthTitleTop" class="calendar-month-title">Mei 2026</h3>
+                            <button id="nextMonthBtnTop" type="button" onclick="goToNextMonth()">Bulan Berikutnya →</button>
+                        </div>
+
+                        <div class="training-weekday-row" id="weekdayRow"></div>
+                        <div class="training-days-grid" id="daysGrid"></div>
+
+                        <div class="calendar-nav bottom">
+                            <button id="prevMonthBtnBottom" type="button" onclick="goToPreviousMonth()">← Bulan Sebelumnya</button>
+                            <h3 id="activeMonthTitleBottom" class="calendar-month-title">Mei 2026</h3>
+                            <button id="nextMonthBtnBottom" type="button" onclick="goToNextMonth()">Bulan Berikutnya →</button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
             <div class="card">
                 <h2>Pantauan Grafik Latihan</h2>
                 <div class="iframe-placeholder" style="height: 450px;">
@@ -116,12 +526,12 @@
             <div class="card">
                 <h2>Materi Pembinaan</h2>
                 <div id="materi-list" class="grid-3"></div>
-                
+
                 <div id="materi-detail" style="display: none; margin-top: 1rem;">
                     <button class="btn" onclick="kembaliKeDaftarMateri()" style="margin-bottom: 1.5rem; background: #95a5a6;">&larr; Kembali</button>
                     <h3 id="detail-judul" style="color: #2c3e50; font-size: 1.8rem; border-bottom: 2px solid #ecf0f1; padding-bottom: 0.5rem; margin-bottom: 1rem;"></h3>
                     <div id="detail-konten" style="line-height: 1.8; font-size: 1.05rem;"></div>
-                    
+
                     <div id="detail-items" style="margin-top: 2rem;"></div>
                 </div>
             </div>
@@ -129,7 +539,7 @@
 
         <div id="form-latihan" class="section">
             <h2 style="color: #2c3e50; margin-bottom: 1.5rem; text-align: center;">Pilih Formulir Latihan</h2>
-            
+
             <div class="grid-3">
                 <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid #27ae60;">
                     <div>
@@ -173,6 +583,16 @@
                 <a href="#" target="_blank" class="btn" style="background: #2980b9; padding: 0.8rem 2rem;">Isi Form Angket Atlet</a>
             </div>
         </div>
+    </div>
+
+    <div id="modalBackdrop" class="training-modal-backdrop" onclick="closeModal(event)">
+        <article class="training-modal">
+            <div class="training-modal-header">
+                <h3 id="modalTitle">Detail Latihan</h3>
+                <button class="close-btn" onclick="hideModal()">Tutup</button>
+            </div>
+            <div id="modalContent" class="training-detail"></div>
+        </article>
     </div>
 
     <footer><p> &copy; Copyright 2026, Ahmad Dhani Rohiyat, S. Pd</p></footer>
@@ -293,13 +713,13 @@
             if(materi) {
                 document.getElementById('detail-judul').innerText = materi.judul_materi;
                 document.getElementById('detail-konten').innerHTML = materi.deskripsi;
-                
+
                 // Logika Kondisional untuk merender Array Item
                 itemContainer.innerHTML = ''; 
                 if (materi.item && materi.item.length > 0) {
                     let htmlItems = '<h4 style="margin-bottom: 1rem; color: #2980b9;">Unit Latihan:</h4>';
                     htmlItems += '<div style="display: flex; flex-direction: column; gap: 1.5rem;">';
-                    
+
                     materi.item.forEach(unit => {
                         htmlItems += `
                             <div class="card" style="border-left: 5px solid #3498db; margin-bottom: 0;">
@@ -311,11 +731,11 @@
                             </div>
                         `;
                     });
-                    
+
                     htmlItems += '</div>';
                     itemContainer.innerHTML = htmlItems;
                 }
-                
+
                 materiListContainer.style.display = 'none';
                 materiDetailContainer.style.display = 'block';
             }
@@ -326,7 +746,261 @@
             materiDetailContainer.style.display = 'none';
         }
 
+        // --- Logika Kalender Latihan ---
+        const teknikLatihan = [
+            "Forehand",
+            "Backhand",
+            "Volley",
+            "Drive Volley",
+            "Slice",
+            "Half Volley",
+            "Smash",
+            "Service"
+        ];
+
+        const rincianTeknik = teknikLatihan
+            .map((teknik, index) => `${index + 1}. ${teknik}`)
+            .join("<br>");
+
+        const trainingData = [
+            {
+                id: 1,
+                nama: "Latihan Teknik Soft Tennis",
+                durasi: "120 menit",
+                detail: rincianTeknik
+            },
+            {
+                id: 2,
+                nama: "Latihan Teknik Soft Tennis",
+                durasi: "180 menit",
+                detail: rincianTeknik
+            }
+        ];
+
+        const calendarConfig = {
+            year: 2026,
+            startMonth: 4, // Mei
+            endMonth: 9,   // Oktober
+            activeMonth: 4,
+            trainingDays: [0, 3], // Minggu dan Rabu
+            specialDates: []
+        };
+
+        const monthNames = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        const weekdayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+        function formatDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatLongDate(dateKey) {
+            const date = new Date(dateKey + "T00:00:00");
+            return `${weekdayNames[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+        }
+
+        function getTrainingDurationByDay(dayOfWeek, fallbackDuration) {
+            if (dayOfWeek === 3) return "120 menit";
+            if (dayOfWeek === 0) return "180 menit";
+            return fallbackDuration;
+        }
+
+        function generateTrainingMap() {
+            const trainingMap = {};
+
+            for (let month = calendarConfig.startMonth; month <= calendarConfig.endMonth; month++) {
+                const totalDays = new Date(calendarConfig.year, month + 1, 0).getDate();
+
+                for (let day = 1; day <= totalDays; day++) {
+                    const currentDate = new Date(calendarConfig.year, month, day);
+                    const dayOfWeek = currentDate.getDay();
+
+                    if (calendarConfig.trainingDays.includes(dayOfWeek)) {
+                        const key = formatDateKey(currentDate);
+
+                        trainingMap[key] = {
+                            ...trainingData[0],
+                            durasi: getTrainingDurationByDay(dayOfWeek, trainingData[0].durasi),
+                            tipe: "Latihan Rutin"
+                        };
+                    }
+                }
+            }
+
+            calendarConfig.specialDates.forEach(item => {
+                const selectedTraining = trainingData.find(training => training.id === Number(item.trainingId));
+
+                if (selectedTraining) {
+                    const selectedDate = new Date(item.date + "T00:00:00");
+                    const dayOfWeek = selectedDate.getDay();
+
+                    trainingMap[item.date] = {
+                        ...selectedTraining,
+                        durasi: getTrainingDurationByDay(dayOfWeek, selectedTraining.durasi),
+                        tipe: "Latihan Khusus",
+                        catatan: item.note || "Latihan tambahan khusus."
+                    };
+                }
+            });
+
+            return trainingMap;
+        }
+
+        function renderTrainingOptions() {
+            const select = document.getElementById("specialTraining");
+            select.innerHTML = "";
+
+            trainingData.forEach(training => {
+                const option = document.createElement("option");
+                option.value = training.id;
+                option.textContent = `${training.nama} - ${training.durasi}`;
+                select.appendChild(option);
+            });
+        }
+
+        function renderWeekdayRow() {
+            const weekdayRow = document.getElementById("weekdayRow");
+            weekdayRow.innerHTML = weekdayNames.map(day => `<div>${day}</div>`).join("");
+        }
+
+        function renderCalendar() {
+            const daysGrid = document.getElementById("daysGrid");
+            const trainingMap = generateTrainingMap();
+
+            const month = calendarConfig.activeMonth;
+            const totalDays = new Date(calendarConfig.year, month + 1, 0).getDate();
+            const firstDay = new Date(calendarConfig.year, month, 1).getDay();
+
+            updateMonthTitles();
+            daysGrid.innerHTML = "";
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement("div");
+                empty.className = "training-day-cell empty";
+                daysGrid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const date = new Date(calendarConfig.year, month, day);
+                const key = formatDateKey(date);
+                const training = trainingMap[key];
+
+                const dayEl = document.createElement("div");
+                dayEl.className = "training-day-cell";
+                dayEl.innerHTML = `<div class="training-date-number">${day}</div>`;
+
+                if (training) {
+                    dayEl.classList.add("training-day-active");
+                    dayEl.innerHTML += `<div class="training-badge">${training.nama}</div>`;
+
+                    if (training.tipe === "Latihan Khusus") {
+                        dayEl.innerHTML += `<div class="training-special-badge">Khusus</div>`;
+                    }
+
+                    dayEl.addEventListener("click", () => showTrainingDetail(key, training));
+                }
+
+                daysGrid.appendChild(dayEl);
+            }
+
+            updateNavigationButtons();
+        }
+
+        function updateMonthTitles() {
+            const title = `${monthNames[calendarConfig.activeMonth]} ${calendarConfig.year}`;
+            document.getElementById("activeMonthTitleTop").textContent = title;
+            document.getElementById("activeMonthTitleBottom").textContent = title;
+        }
+
+        function updateNavigationButtons() {
+            const isFirstMonth = calendarConfig.activeMonth <= calendarConfig.startMonth;
+            const isLastMonth = calendarConfig.activeMonth >= calendarConfig.endMonth;
+
+            document.getElementById("prevMonthBtnTop").disabled = isFirstMonth;
+            document.getElementById("prevMonthBtnBottom").disabled = isFirstMonth;
+            document.getElementById("nextMonthBtnTop").disabled = isLastMonth;
+            document.getElementById("nextMonthBtnBottom").disabled = isLastMonth;
+        }
+
+        function goToPreviousMonth() {
+            if (calendarConfig.activeMonth > calendarConfig.startMonth) {
+                calendarConfig.activeMonth--;
+                renderCalendar();
+            }
+        }
+
+        function goToNextMonth() {
+            if (calendarConfig.activeMonth < calendarConfig.endMonth) {
+                calendarConfig.activeMonth++;
+                renderCalendar();
+            }
+        }
+
+        function showTrainingDetail(dateKey, training) {
+            document.getElementById("modalTitle").textContent = training.nama;
+            document.getElementById("modalContent").innerHTML = `
+                <p><strong>Tanggal:</strong> ${formatLongDate(dateKey)}</p>
+                <p><strong>Tipe:</strong> ${training.tipe}</p>
+                <p><strong>Durasi:</strong> ${training.durasi}</p>
+                <p><strong>Rincian Latihan:</strong><br>${training.detail}</p>
+                ${training.catatan ? `<p><strong>Catatan:</strong> ${training.catatan}</p>` : ""}
+            `;
+
+            document.getElementById("modalBackdrop").classList.add("active");
+        }
+
+        function hideModal() {
+            document.getElementById("modalBackdrop").classList.remove("active");
+        }
+
+        function closeModal(event) {
+            if (event.target.id === "modalBackdrop") {
+                hideModal();
+            }
+        }
+
+        function addSpecialTrainingDate() {
+            const date = document.getElementById("specialDate").value;
+            const trainingId = document.getElementById("specialTraining").value;
+            const note = document.getElementById("specialNote").value;
+
+            if (!date) {
+                alert("Pilih tanggal latihan terlebih dahulu.");
+                return;
+            }
+
+            const selectedDate = new Date(date + "T00:00:00");
+            const selectedMonth = selectedDate.getMonth();
+
+            if (selectedMonth < calendarConfig.startMonth || selectedMonth > calendarConfig.endMonth) {
+                alert("Tanggal latihan harus berada dalam periode Mei sampai Oktober 2026.");
+                return;
+            }
+
+            const existingIndex = calendarConfig.specialDates.findIndex(item => item.date === date);
+            const newItem = { date, trainingId, note };
+
+            if (existingIndex >= 0) {
+                calendarConfig.specialDates[existingIndex] = newItem;
+            } else {
+                calendarConfig.specialDates.push(newItem);
+            }
+
+            calendarConfig.activeMonth = selectedMonth;
+            document.getElementById("specialNote").value = "";
+            renderCalendar();
+        }
+
         renderDaftarMateri();
+        renderTrainingOptions();
+        renderWeekdayRow();
+        renderCalendar();
     </script>
 </body>
 </html>
