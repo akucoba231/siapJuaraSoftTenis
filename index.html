@@ -22,7 +22,7 @@
         .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
         .menu-toggle span { display: block; width: 25px; height: 3px; background-color: white; border-radius: 3px; transition: 0.3s; }
 
-        /* Responsive Design */
+        /* Responsive Design Navigasi & Layout */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
             nav ul {
@@ -52,15 +52,15 @@
         .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
         .card h2 { color: #2c3e50; margin-bottom: 1rem; border-bottom: 2px solid #ecf0f1; padding-bottom: 0.5rem; }
 
-        /* Jumbotron */
+        /* Jumbotron - Responsif */
         .jumbotron { 
             background: linear-gradient(135deg, #3498db, #2980b9); 
             background-image: url('bg.webp');
             background-position: center center;
             background-repeat: no-repeat;
-            background-size: 100% 100%;
+            background-size: cover; /* Diubah ke cover agar gambar tidak gepeng */
             color: white; 
-            padding: 5rem 5rem 2.5rem 5rem; 
+            padding: 5rem 5rem 3.5rem 5rem; 
             border-radius: 8px; 
             text-align: center; 
             margin-bottom: 2rem; 
@@ -71,36 +71,38 @@
             justify-content: flex-end;
             align-items: center;
             position: relative;
+            overflow: hidden;
         }
         .jumbotron > * {
-            text-shadow: 3px 3px 8px #fff;
+            text-shadow: 1px 1px 4px rgba(255,255,255,0.5);
             color: #000;
-            background: rgba(255,255,255,.8);
+            background: rgba(255,255,255,.85);
+            width: 100%; /* Memastikan background putih melebar penuh di area teks */
+            padding: 0.5rem 1rem;
         }
-        .jumbotron h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .jumbotron h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
         .jumbotron p { font-size: 1.1rem; opacity: 0.9; }
+        
         .jumbotron .label {
             position: absolute;
             left: 0;
             bottom: 0;
-            padding: 3px 10px;
+            padding: 5px 15px;
             text-align: left;
+            width: auto;
         }
         .jumbotron .label span {
             font-weight: bold;
             letter-spacing: 1px;
         }
-
         .jumbotron .label::before {
             position: absolute;
             top: 0;
             left: 100%;
             content: "";
-            border-left: 35px solid rgba(255,255,255,.8);
+            border-left: 35px solid rgba(255,255,255,.85);
             border-top: 35px solid transparent;
         }
-
-        @media (max-width: 768px) { .jumbotron { padding: 2rem 1rem; } .jumbotron h1 { font-size: 2rem; } }
 
         /* Tombol */
         .btn { display: inline-block; background: #e67e22; color: white; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 4px; font-weight: bold; cursor: pointer; border: none; transition: background 0.3s; text-align: center;}
@@ -114,8 +116,25 @@
         .materi-item:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); border-color: #3498db;}
         .materi-item h3 { color: #2980b9; margin-bottom: 0.5rem; }
 
-        /* Placeholder Iframe */
-        .iframe-placeholder { width: 100%; background: transparent; border: none; display: flex; justify-content: center; align-items: center; color: #7f8c8d; font-weight: bold; border-radius: 8px; text-align: center; padding: 1rem;}
+        /* Placeholder Iframe - Responsif */
+        .iframe-placeholder { 
+            width: 100%; 
+            background: transparent; 
+            border: none; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #7f8c8d; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            text-align: center; 
+            padding: 0;
+            overflow: hidden;
+        }
+        .iframe-placeholder iframe {
+            width: 100% !important;
+            max-width: 100%;
+        }
 
         /* Kalender Latihan */
         .training-calendar-wrapper {
@@ -403,6 +422,55 @@
             border-color: #16a34a;
         }
 
+        /* --- MEDIA QUERIES TAMBAHAN UNTUK MOBILE REKAYASA (FOKUS UTAMA) --- */
+        @media (max-width: 768px) {
+            .container { 
+                max-width: 95vw; /* Memperlebar konten di mobile agar tidak sempit */
+                margin: 1rem auto; 
+            }
+
+            .jumbotron { 
+                aspect-ratio: auto; /* Mematikan rasio kaku desktop */
+                padding: 2rem 1rem 3.5rem 1rem; /* Mengurangi padding dalam */
+                min-height: 250px;
+                
+            }
+
+            .jumbotron h1 { 
+                font-size: 0.75rem;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: none;
+                color: #fff;
+                text-shadow: 2px 2px 3px #000;
+            }
+
+            .jumbotron p { 
+                display: none;
+                font-size: 0.9rem; 
+            }
+
+            .jumbotron .label {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
+
+            .jumbotron .label::before {
+                border-left-width: 20px;
+                border-top-width: 25px;
+            }
+
+            /* Perbaikan Iframe Looker Studio agar proporsional */
+            .iframe-placeholder {
+                height: auto !important;
+                aspect-ratio: 4 / 3;
+            }
+            .iframe-placeholder iframe {
+                height: 100% !important;
+            }
+        }
+
         @media (max-width: 760px) {
             .training-controls {
                 grid-template-columns: 1fr 1fr;
@@ -497,7 +565,7 @@
             <div class="jumbotron">
                 <h1>Penetapan Program Latihan Soft Tenis Pada Atlet Usia 15 - 18 Menuju Kejuaraan Porprov Jawa Barat 2026 Dengan Pemanfaatan Googlesite</h1>
                 <p>Mempersiapkan atlet usia 15-18 tahun ke tingkat prestasi utama melalui program latihan terstruktur.</p>
-                <p class="label">oleh : <span>Ahmad Dhani Rohiyat, S. Pd</span></p>
+                <div class="label">oleh : <span>Ahmad Dhani Rohiyat, S. Pd</span></div>
             </div>
 
             <div class="card" style="text-align: center;">
@@ -645,54 +713,54 @@
     <script>
         // Data JSON Materi Berdasarkan Struktur Baru (RDBMS to JSON)
         const dataMateri = [
+        {
+            id_materi: 1,
+            judul_materi: "Teknik Dasar",
+            jenis_materi: "teknik",
+            deskripsi: `
+            <p>Teknik dasar merupakan kemampuan fundamental yang harus dikuasai oleh setiap atlet soft tenis.</p>
+            <p>Latihan teknik ini difokuskan pada peningkatan akurasi dan variasi pukulan yang disesuaikan dengan karakteristik elastisitas bola soft tenis. Berikut adalah instrumen latihan yang harus dikuasai:</p>
+            `,
+            item: [
             {
-                id_materi: 1,
-                judul_materi: "Teknik Dasar",
-                jenis_materi: "teknik",
-                deskripsi: `
-                    <p>Teknik dasar merupakan kemampuan fundamental yang harus dikuasai oleh setiap atlet soft tenis.</p>
-                    <p>Latihan teknik ini difokuskan pada peningkatan akurasi dan variasi pukulan yang disesuaikan dengan karakteristik elastisitas bola soft tenis. Berikut adalah instrumen latihan yang harus dikuasai:</p>
-                `,
-                item: [
-                    {
-                        id_unit: "T01",
-                        judul_unit: "Forehand",
-                        deskripsi_unit: "Tujuan: Mengukur akurasi pukulan forehand. Lakukan drill forehand menyilang dan lurus sesuai instruksi pelatih.",
-                        video_unit: "[Area Video Contoh Teknik Forehand]"
-                    },
-                    {
-                        id_unit: "T02",
-                        judul_unit: "Backhand",
-                        deskripsi_unit: "Tujuan: Mengukur kemampuan backhand. Fokus pada footwork dan keseimbangan tubuh saat impact dengan bola.",
-                        video_unit: "[Area Video Contoh Teknik Backhand]"
-                    },
-                    {
-                        id_unit: "T03",
-                        judul_unit: "Service",
-                        deskripsi_unit: "Tujuan: Mengukur akurasi dan variasi servis (seperti twist serve). Perhatikan lemparan bola (toss) dan titik pukul.",
-                        video_unit: "[Area Video Contoh Teknik Service]"
-                    },
-                    {
-                        id_unit: "T04",
-                        judul_unit: "Rally",
-                        deskripsi_unit: "Tujuan: Melatih daya tahan dan stabilitas pukulan dasar secara berkesinambungan tanpa terputus.",
-                        video_unit: "[Area Video Contoh Latihan Rally]"
-                    },
-                    {
-                        id_unit: "T05",
-                        judul_unit: "Akurasi & Konsistensi",
-                        deskripsi_unit: "Tujuan: Menggabungkan seluruh teknik dasar untuk memastikan pukulan stabil dan diarahkan tepat pada target.",
-                        video_unit: "[Area Video Contoh Drill Akurasi]"
-                    }
-                ]
+                id_unit: "T01",
+                judul_unit: "Forehand",
+                deskripsi_unit: "Tujuan: Mengukur akurasi pukulan forehand. Lakukan drill forehand menyilang dan lurus sesuai instruksi pelatih.",
+                video_unit: "[Area Video Contoh Teknik Forehand]"
             },
             {
-                id_materi: 2,
-                judul_materi: "Latihan Fisik",
-                jenis_materi: "fisik",
-                deskripsi: `
-                    <p>Optimalisasi fisik dilakukan melalui program <em>progressive overload</em> yang berfokus pada peningkatan daya tahan kardiovaskular, kelincahan (<em>agility</em>), dan kekuatan ekslosif otot tungkai.</p>
-                `,
+                id_unit: "T02",
+                judul_unit: "Backhand",
+                deskripsi_unit: "Tujuan: Mengukur kemampuan backhand. Fokus pada footwork dan keseimbangan tubuh saat impact dengan bola.",
+                video_unit: "[Area Video Contoh Teknik Backhand]"
+            },
+            {
+                id_unit: "T03",
+                judul_unit: "Service",
+                deskripsi_unit: "Tujuan: Mengukur akurasi dan variasi servis (seperti twist serve). Perhatikan lemparan bola (toss) dan titik pukul.",
+                video_unit: "[Area Video Contoh Teknik Service]"
+            },
+            {
+                id_unit: "T04",
+                judul_unit: "Rally",
+                deskripsi_unit: "Tujuan: Melatih daya tahan dan stabilitas pukulan dasar secara berkesinambungan tanpa terputus.",
+                video_unit: "[Area Video Contoh Latihan Rally]"
+            },
+            {
+                id_unit: "T05",
+                judul_unit: "Akurasi & Konsistensi",
+                deskripsi_unit: "Tujuan: Menggabungkan seluruh teknik dasar untuk memastikan pukulan stabil dan diarahkan tepat pada target.",
+                video_unit: "[Area Video Contoh Drill Akurasi]"
+            }
+            ]
+        },
+        {
+            id_materi: 2,
+            judul_materi: "Latihan Fisik",
+            jenis_materi: "fisik",
+            deskripsi: `
+            <p>Optimalisasi fisik dilakukan melalui program <em>progressive overload</em> yang berfokus pada peningkatan daya tahan kardiovaskular, kelincahan (<em>agility</em>), dan kekuatan ekslosif otot tungkai.</p>
+            `,
                 item: [] // Array kosong, item unit tidak akan di-render
             },
             {
@@ -700,12 +768,12 @@
                 judul_materi: "Latih Tanding",
                 jenis_materi: "mental",
                 deskripsi: `
-                    <p>Fokus latihan dialihkan pada latihan berbasis pertandingan (<em>match play</em> dominan) dengan penekanan pada kecepatan, reaksi, dan strategi.</p>
-                    <p>Latihan mental seperti visualisasi dan kontrol emosi diintegrasikan agar atlet memiliki kepercayaan diri tinggi saat menghadapi tekanan.</p>
+                <p>Fokus latihan dialihkan pada latihan berbasis pertandingan (<em>match play</em> dominan) dengan penekanan pada kecepatan, reaksi, dan strategi.</p>
+                <p>Latihan mental seperti visualisasi dan kontrol emosi diintegrasikan agar atlet memiliki kepercayaan diri tinggi saat menghadapi tekanan.</p>
                 `,
                 item: [] // Array kosong
             }
-        ];
+            ];
 
         // --- Logika Menu & Navigasi SPA ---
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -767,13 +835,13 @@
 
                     materi.item.forEach(unit => {
                         htmlItems += `
-                            <div class="card" style="border-left: 5px solid #3498db; margin-bottom: 0;">
-                                <h4 style="color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.5rem;">${unit.judul_unit}</h4>
-                                <p style="margin-bottom: 1rem; font-size: 0.95rem;">${unit.deskripsi_unit}</p>
-                                <div class="iframe-placeholder" style="height: 250px;">
-                                    ${unit.video_unit}
-                                </div>
-                            </div>
+                        <div class="card" style="border-left: 5px solid #3498db; margin-bottom: 0;">
+                        <h4 style="color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.5rem;">${unit.judul_unit}</h4>
+                        <p style="margin-bottom: 1rem; font-size: 0.95rem;">${unit.deskripsi_unit}</p>
+                        <div class="iframe-placeholder" style="height: 250px;">
+                        ${unit.video_unit}
+                        </div>
+                        </div>
                         `;
                     });
 
@@ -793,33 +861,33 @@
 
         // --- Logika Kalender Latihan ---
         const teknikLatihan = [
-            "Forehand",
-            "Backhand",
-            "Volley",
-            "Drive Volley",
-            "Slice",
-            "Half Volley",
-            "Smash",
-            "Service"
+        "Forehand",
+        "Backhand",
+        "Volley",
+        "Drive Volley",
+        "Slice",
+        "Half Volley",
+        "Smash",
+        "Service"
         ];
 
         const rincianTeknik = teknikLatihan
-            .map((teknik, index) => `${index + 1}. ${teknik}`)
-            .join("<br>");
+        .map((teknik, index) => `${index + 1}. ${teknik}`)
+        .join("<br>");
 
         const trainingData = [
-            {
-                id: 1,
-                nama: "Latihan Teknik Soft Tennis",
-                durasi: "120 menit",
-                detail: rincianTeknik
-            },
-            {
-                id: 2,
-                nama: "Latihan Teknik Soft Tennis",
-                durasi: "180 menit",
-                detail: rincianTeknik
-            }
+        {
+            id: 1,
+            nama: "Latihan Teknik Soft Tennis",
+            durasi: "120 menit",
+            detail: rincianTeknik
+        },
+        {
+            id: 2,
+            nama: "Latihan Teknik Soft Tennis",
+            durasi: "180 menit",
+            detail: rincianTeknik
+        }
         ];
 
         const calendarConfig = {
@@ -832,8 +900,8 @@
         };
 
         const monthNames = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ];
 
         const weekdayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
@@ -881,7 +949,7 @@
             calendarConfig.specialDates.forEach(item => {
                 const selectedTraining = trainingData.find(training => training.id === Number(item.trainingId));
 
-                if (selectedTraining) {
+                if (selectedSelected) {
                     const selectedDate = new Date(item.date + "T00:00:00");
                     const dayOfWeek = selectedDate.getDay();
 
@@ -990,11 +1058,11 @@
         function showTrainingDetail(dateKey, training) {
             document.getElementById("modalTitle").textContent = training.nama;
             document.getElementById("modalContent").innerHTML = `
-                <p><strong>Tanggal:</strong> ${formatLongDate(dateKey)}</p>
-                <p><strong>Tipe:</strong> ${training.tipe}</p>
-                <p><strong>Durasi:</strong> ${training.durasi}</p>
-                <p><strong>Rincian Latihan:</strong><br>${training.detail}</p>
-                ${training.catatan ? `<p><strong>Catatan:</strong> ${training.catatan}</p>` : ""}
+            <p><strong>Tanggal:</strong> ${formatLongDate(dateKey)}</p>
+            <p><strong>Tipe:</strong> ${training.tipe}</p>
+            <p><strong>Durasi:</strong> ${training.durasi}</p>
+            <p><strong>Rincian Latihan:</strong><br>${training.detail}</p>
+            ${training.catatan ? `<p><strong>Catatan:</strong> ${training.catatan}</p>` : ""}
             `;
 
             document.getElementById("modalBackdrop").classList.add("active");
