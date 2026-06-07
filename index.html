@@ -43,7 +43,7 @@
         }
 
         /* Container & Section */
-        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; flex: 1; width: 100%;}
+        .container { max-width: 80vw; margin: 2rem auto; padding: 0 1rem; flex: 1; width: 100%;}
         .section { display: none; animation: fadeIn 0.4s ease-in-out; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -53,9 +53,53 @@
         .card h2 { color: #2c3e50; margin-bottom: 1rem; border-bottom: 2px solid #ecf0f1; padding-bottom: 0.5rem; }
 
         /* Jumbotron */
-        .jumbotron { background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 3rem 2rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; }
-        .jumbotron h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .jumbotron { 
+            background: linear-gradient(135deg, #3498db, #2980b9); 
+            background-image: url('bg.webp');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            color: white; 
+            padding: 5rem 5rem 2.5rem 5rem; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+        }
+        .jumbotron > * {
+            text-shadow: 3px 3px 8px #fff;
+            color: #000;
+            background: rgba(255,255,255,.8);
+        }
+        .jumbotron h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
         .jumbotron p { font-size: 1.1rem; opacity: 0.9; }
+        .jumbotron .label {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            padding: 3px 10px;
+            text-align: left;
+        }
+        .jumbotron .label span {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .jumbotron .label::before {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            content: "";
+            border-left: 35px solid rgba(255,255,255,.8);
+            border-top: 35px solid transparent;
+        }
+
         @media (max-width: 768px) { .jumbotron { padding: 2rem 1rem; } .jumbotron h1 { font-size: 2rem; } }
 
         /* Tombol */
@@ -453,6 +497,7 @@
             <div class="jumbotron">
                 <h1>Penetapan Program Latihan Soft Tenis Pada Atlet Usia 15 - 18 Menuju Kejuaraan Porprov Jawa Barat 2026 Dengan Pemanfaatan Googlesite</h1>
                 <p>Mempersiapkan atlet usia 15-18 tahun ke tingkat prestasi utama melalui program latihan terstruktur.</p>
+                <p class="label">oleh : <span>Ahmad Dhani Rohiyat, S. Pd</span></p>
             </div>
 
             <div class="card" style="text-align: center;">
