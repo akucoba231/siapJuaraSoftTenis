@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    
     
     <style>
         /* CSS Reset & Variables */
@@ -155,6 +158,24 @@
         .training-badge.special { background: #dcfce7; color: #16a34a; border-color: #bbf7d0;}
         .training-badge.special:hover { background: #bbf7d0; }
 
+        /* Custom Notification */
+        #notification-container {
+            position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+            width: 90%; max-width: 400px;
+        }
+        .notification-box {
+            background: #10b981; color: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        .notification-box.error { background: #ef4444; }
+        .notification-content { font-size: 0.95rem; font-weight: 500; color: white; margin-right: 15px; line-height: 1.4; flex: 1; }
+        .notif-btn { background: rgba(255,255,255,0.2); border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; transition: 0.2s; font-size: 0.85rem; }
+        .notif-btn:hover { background: rgba(255,255,255,0.3); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
+
         /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(4px);}
         .modal-overlay.active { display: flex; opacity: 1; }
@@ -173,6 +194,35 @@
         .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--text-dark); }
         .form-group input, .form-group select { width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+        .checkbox-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .checkbox-group label { display: flex; align-items: center; gap: 0.4rem; font-weight: normal; margin-bottom: 0; font-size: 0.9rem; cursor: pointer; }
+        .checkbox-group input[type="checkbox"] { width: auto; padding: 0; margin: 0; }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .materi-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .materi-item {
+            background: var(--bg-hover);
+            padding: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            border: 1px solid var(--border);
+            border-left: 10px solid var(--secondary);
+            transition: 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .materi-item:hover {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
 
         /* SPA Materi Styles */
         /* Profile KTP Style */
@@ -217,6 +267,24 @@
             flex-wrap: wrap;
         }
         .btn-back { 
+            padding: 0.5rem 1rem; border-radius: 6px; background: #f1f5f9; color: var(--text-dark); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: var(--transition); border: 1px solid #e2e8f0;
+        }
+        .btn-back:hover { background: #e2e8f0; }
+
+        /* Global Loader */
+        #globalLoader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #globalLoader.active { opacity: 1; pointer-events: all; }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 1rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
             background: #f1f5f9; border: none; padding: 0.5rem 1rem; border-radius: 6px; 
             cursor: pointer; font-weight: 600; color: var(--text-dark); transition: 0.2s; display: flex; align-items: center; gap: 0.5rem;
         }
@@ -291,6 +359,9 @@
             .materi-card { padding: 1.2rem; }
             .info-grid { padding: 1.2rem; }
             .detail-header h2 { font-size: 1.6rem; }
+            .profile-grid { grid-template-columns: 1fr; }
+            .profile-grid .form-group { grid-column: 1 / -1 !important; }
+            .checkbox-group { flex-direction: column; gap: 0.5rem; }
         }
 
         /* Small Mobile */
@@ -310,9 +381,21 @@
             .breadcrumb { padding: 0.8rem 1rem; }
             .breadcrumb-text { font-size: 0.95rem; }
         }
+
+
+        .white {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
+    <!-- Global Loader -->
+    <div id="globalLoader">
+        <div class="spinner"></div>
+        <div style="color: var(--text-dark); font-weight: 500;">Memproses...</div>
+    </div>
+    
+    <div id="notification-container"></div>
 
     <!-- Navbar -->
     <nav id="navbar">
@@ -339,7 +422,7 @@
                 <div class="dropdown" onclick="toggleDropdown(this)">
                     <a style="cursor: pointer;">Latihan &#9662;</a>
                     <div class="dropdown-content">
-                        <a data-target="form-latihan">Form Latihan</a>
+                        <a data-target="latihan">Catatan Latihan</a>
                         <a data-target="grafik-riwayat">Grafik & Riwayat</a>
                     </div>
                 </div>
@@ -385,7 +468,7 @@
                 <div class="calendar-wrapper">
                     <div class="calendar-nav">
                         <button id="prevMonth" onclick="changeMonth(-1)">&#8592; Sebelumnya</button>
-                        <h3 id="monthYearDisplay">Bulan Tahun</h3>
+                        <h3 id="monthYearDisplay" class="white">Bulan Tahun</h3>
                         <button id="nextMonth" onclick="changeMonth(1)">Berikutnya &#8594;</button>
                     </div>
                     <div class="calendar-grid" id="calendarGrid">
@@ -459,6 +542,102 @@
                 <p style="color: var(--text-light); text-align: center; max-width: 600px;">Tampilan kalender jadwal lengkap untuk mengetahui seluruh agenda latihan.</p>
             </div>
         </div>
+        <!-- LATIHAN FULL SECTION -->
+        <div id="latihan" class="section">
+            <!-- Tampilan Atlet: Grid 18 Materi -->
+            <div id="atletLatihanView" style="display: none;">
+                <h2 class="section-title">Form Catatan Latihan</h2>
+                <p style="color: var(--text-light); text-align: center; margin-bottom: 2rem;">Pilih materi latihan yang ingin Anda ajukan hari ini.</p>
+                <div class="materi-grid" id="gridMateriLatihan">
+                    <!-- Akan diisi oleh JS -->
+                </div>
+            </div>
+
+            <!-- Tampilan Pelatih: Daftar Persetujuan -->
+            <div id="pelatihLatihanView" style="display: none;">
+                <h2 class="section-title">Persetujuan Catatan Latihan</h2>
+                <p style="color: var(--text-light); text-align: center; margin-bottom: 2rem;">Daftar latihan atlet yang menunggu evaluasi dan persetujuan.</p>
+                <div id="listPersetujuanLatihan" style="margin-top: 1rem;">
+                    <!-- Akan diisi oleh JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM LATIHAN SECTION (HALAMAN) -->
+        <div id="form-latihan" class="section">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                    <button class="btn" style="background: var(--bg-hover); color: var(--text-dark); padding: 0.5rem 1rem; margin-right: 1rem;" onclick="navigateTo('latihan')">
+                        &larr; Kembali
+                    </button>
+                    <h2 class="section-title" id="atletLatihanTitle" style="margin-bottom: 0;">Form Latihan</h2>
+                </div>
+                
+                <form id="atletLatihanForm" onsubmit="submitLatihanAtlet(event)">
+                    <input type="hidden" id="atletMateriName">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Tempat Latihan</label>
+                            <select id="atletTempat" required>
+                                <option value="">-- Pilih Tempat Latihan --</option>
+                                <option value="Lapangan Tenis Stadion Wibawa Mukti">Lapangan Tenis Stadion Wibawa Mukti</option>
+                                <option value="Lapangan Pemda Bekasi">Lapangan Pemda Bekasi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Latihan</label>
+                            <input type="date" id="atletTanggal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Waktu (Durasi)</label>
+                            <input type="text" id="atletWaktu" placeholder="Misal: 15 Menit">
+                        </div>
+                        <div class="form-group">
+                            <label>Target</label>
+                            <input type="number" id="atletTarget">
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Dicapai</label>
+                            <input type="number" id="atletJumlah">
+                        </div>
+                        <div class="form-group">
+                            <label>Benar</label>
+                            <input type="number" id="atletBenar">
+                        </div>
+                        <div class="form-group">
+                            <label>Salah</label>
+                            <input type="number" id="atletSalah">
+                        </div>
+                        <div class="form-group">
+                            <label>Koreksi (Pelatih)</label>
+                            <textarea id="atletKoreksi" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Nilai (1 - 5)</label>
+                            <select id="atletNilai">
+                                <option value="">-- Pilih Nilai --</option>
+                                <option value="5">5 - Pukulan sangat akurat dan konsisten</option>
+                                <option value="4">4 - Pukulan cukup akurat</option>
+                                <option value="3">3 - Pukulan cukup namun kurang konsisten</option>
+                                <option value="2">2 - Pukulan kurang tepat</option>
+                                <option value="1">1 - Pukulan tidak tepat</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Evaluasi</label>
+                            <textarea id="atletEvaluasi" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Catatan</label>
+                            <textarea id="atletCatatan" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <button type="submit" class="btn" style="width: 100%;">Ajukan Catatan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- DOKUMENTASI FULL SECTION (DUMMY) -->
         <div id="dokumentasi" class="section">
@@ -483,6 +662,9 @@
                         <input type="password" id="loginPassword" placeholder="Masukkan kata sandi" style="width: 100%; padding: 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-family: inherit;">
                     </div>
                     <button class="btn" onclick="handleLogin()" style="width: 100%; margin-top: 0.5rem; border-radius: 8px;">Masuk</button>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                        Belum punya akun? <a href="javascript:void(0)" onclick="openRegisterModal()" style="color: #0284c7; text-decoration: none; font-weight: 600;">Daftar di sini</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -495,19 +677,77 @@
             </div>
         </div>
 
-        <!-- FORM LATIHAN (DUMMY) -->
-        <div id="form-latihan" class="section">
-            <div class="card" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 class="section-title" style="margin-bottom: 1rem;">Form Latihan</h2>
-                <p style="color: var(--text-light); text-align: center; max-width: 600px;">Halaman ini akan berisi form pengisian data hasil latihan harian.</p>
-            </div>
-        </div>
 
-        <!-- GRAFIK & RIWAYAT (DUMMY) -->
+        <!-- GRAFIK & RIWAYAT SECTION -->
         <div id="grafik-riwayat" class="section">
-            <div class="card" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 class="section-title" style="margin-bottom: 1rem;">Grafik & Riwayat Latihan</h2>
-                <p style="color: var(--text-light); text-align: center; max-width: 600px;">Halaman ini akan menampilkan grafik perkembangan atlet dan riwayat latihan.</p>
+            <h2 class="section-title">Grafik & Riwayat Latihan</h2>
+            
+            <!-- Area Grafik -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display: flex; gap: 10px; margin-bottom: 1rem; border-bottom: 2px solid var(--border); padding-bottom: 10px;">
+                    <button class="btn" id="tabLine" onclick="switchChartTab('line')" style="flex: 1; padding: 10px; border-radius: 8px 8px 0 0; border-bottom: none; background: var(--primary);">Perkembangan (Garis)</button>
+                    <button class="btn" id="tabRadar" onclick="switchChartTab('radar')" style="flex: 1; padding: 10px; border-radius: 8px 8px 0 0; background: var(--bg); color: var(--text-dark); border: 1px solid var(--border); border-bottom: none;">Profil Atlet (Radar)</button>
+                </div>
+                
+                <!-- Kontainer Line Chart -->
+                <div id="lineChartContainer">
+                    <div style="margin-bottom: 1rem; text-align: left;">
+                        <label style="font-weight: 500; font-size: 0.95rem; color: var(--text-dark);">Pilih Materi: </label>
+                        <select id="filterChartMateri" onchange="renderGrafikRiwayat()" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; margin-left: 0.5rem;">
+                            <!-- Opsi dari JS -->
+                        </select>
+                    </div>
+                    <div style="width: 100%; overflow-x: auto; overflow-y: hidden;">
+                        <div style="position: relative; height: 300px; min-width: 800px; width: 100%;">
+                            <canvas id="perkembanganChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kontainer Radar Chart -->
+                <div id="radarChartContainer" style="display: none;">
+                    <div style="position: relative; height: 350px; width: 100%; display: flex; justify-content: center;">
+                        <canvas id="profilAtletChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area Tabel Riwayat -->
+            <div class="card" style="text-align: center;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Tabel Riwayat Catatan Latihan</h3>
+                
+                <div style="margin-bottom: 1.5rem; text-align: left;">
+                    <label style="font-weight: 500; font-size: 0.95rem; color: var(--text-dark);">Filter Materi Latihan: </label>
+                    <select id="filterMateriLatihan" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; margin-left: 0.5rem;">
+                        <option value="">Semua Materi</option>
+                    </select>
+                </div>
+
+                <div style="overflow-x: auto; width: 100%;">
+                    <table id="riwayatTable" class="display" style="width:100%; text-align: left;">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Materi Latihan</th>
+                                <th>Waktu</th>
+                                <th>Benar</th>
+                                <th>Salah</th>
+                                <th>Target</th>
+                                <th>Jumlah</th>
+                                <th>Koreksi</th>
+                                <th>Nilai</th>
+                                <th>Evaluasi</th>
+                                <th>Catatan</th>
+                                <th>Status</th>
+                                <th>Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody style="text-align: left;">
+                            <!-- Akan diisi oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -523,17 +763,130 @@
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
+    <!-- Modal Evaluasi Latihan (Pelatih) -->
+    <div class="modal-overlay" id="pelatihLatihanModal" onclick="closePelatihLatihanModal(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="pelatihLatihanTitle">Evaluasi Latihan</h3>
+                <button class="close-modal" onclick="hidePelatihLatihanModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="pelatihLatihanForm" onsubmit="submitEvaluasiPelatih(event)">
+                    <input type="hidden" id="pelatihLatihanId">
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: var(--bg-hover); border-radius: 8px;">
+                        <p><strong>Atlet:</strong> <span id="evalNamaAtlet"></span></p>
+                        <p><strong>Materi:</strong> <span id="evalMateri"></span></p>
+                        <p><strong>Tanggal:</strong> <span id="evalTanggal"></span></p>
+                        <p><strong>Waktu:</strong> <span id="evalWaktu"></span> | <strong>Target/Jml:</strong> <span id="evalTargetJml"></span> | <strong>Benar/Salah:</strong> <span id="evalBenarSalah"></span></p>
+                    </div>
+                    <div class="profile-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Nilai (1 - 5)</label>
+                            <select id="evalNilai" required>
+                                <option value="5">5 - Pukulan sangat akurat dan konsisten</option>
+                                <option value="4">4 - Pukulan cukup akurat</option>
+                                <option value="3">3 - Pukulan cukup namun kurang konsisten</option>
+                                <option value="2">2 - Pukulan kurang tepat</option>
+                                <option value="1">1 - Pukulan tidak tepat</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Koreksi</label>
+                            <input type="text" id="evalKoreksi">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Evaluasi</label>
+                            <textarea id="evalEvaluasi" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Catatan</label>
+                            <textarea id="evalCatatan" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
+                            <button type="submit" class="btn" style="width: 100%; background: var(--primary);">Setujui & Simpan Nilai</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Latihan (1 Kolom) -->
+    <div class="modal-overlay" id="editLatihanModal" onclick="closeEditLatihanModal(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Edit Catatan Latihan</h3>
+                <button type="button" class="close-modal" onclick="hideEditLatihanModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editLatihanForm" onsubmit="submitEditLatihan(event)">
+                    <input type="hidden" id="editLatihanId">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Tempat Latihan</label>
+                            <select id="editTempat" required>
+                                <option value="">-- Pilih Tempat Latihan --</option>
+                                <option value="Lapangan Tenis Stadion Wibawa Mukti">Lapangan Tenis Stadion Wibawa Mukti</option>
+                                <option value="Lapangan Pemda Bekasi">Lapangan Pemda Bekasi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Latihan</label>
+                            <input type="date" id="editTanggal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Waktu (Durasi)</label>
+                            <input type="text" id="editWaktu" placeholder="Misal: 15 Menit">
+                        </div>
+                        <div class="form-group">
+                            <label>Target</label>
+                            <input type="number" id="editTarget">
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Dicapai</label>
+                            <input type="number" id="editJumlah">
+                        </div>
+                        <div class="form-group">
+                            <label>Benar</label>
+                            <input type="number" id="editBenar">
+                        </div>
+                        <div class="form-group">
+                            <label>Salah</label>
+                            <input type="number" id="editSalah">
+                        </div>
+                        <div class="form-group">
+                            <label>Koreksi (Pelatih)</label>
+                            <textarea id="editKoreksi" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Nilai (1-5)</label>
+                            <input type="number" id="editNilai" min="1" max="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Evaluasi</label>
+                            <textarea id="editEvaluasi" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Catatan</label>
+                            <textarea id="editCatatan" rows="2" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <button type="submit" class="btn" style="background: var(--secondary); color: white; margin-top: 1rem;">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Edit Profil -->
     <div class="modal-overlay" id="editProfileModal" onclick="closeEditModal(event)">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h3>Edit Profil</h3>
+                <h3>Ubah Profil</h3>
                 <button class="close-modal" onclick="hideEditModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editProfileForm" onsubmit="saveProfile(event)">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="profile-grid">
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>Nama Lengkap</label>
                             <input type="text" id="editNama" required>
@@ -545,6 +898,18 @@
                         <div class="form-group">
                             <label>Tempat, Tanggal Lahir</label>
                             <input type="text" id="editTTL" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Usia</label>
+                            <input type="text" id="editUsia" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Sekolah</label>
+                            <input type="text" id="editSekolah" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Alamat</label>
+                            <textarea id="editAlamat" rows="3" required style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Club</label>
@@ -568,14 +933,125 @@
                         </div>
                         <div class="form-group">
                             <label>Kelemahan Utama</label>
-                            <input type="text" id="editKelemahan">
+                            <select id="editKelemahan">
+                                <option value="Forehand">Forehand</option>
+                                <option value="Backhand">Backhand</option>
+                                <option value="Service">Service</option>
+                                <option value="Volley">Volley</option>
+                                <option value="Half Volley">Half Volley</option>
+                                <option value="Drive Volley">Drive Volley</option>
+                                <option value="Slice">Slice</option>
+                            </select>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Posisi Pemain (Pisahkan dengan koma)</label>
-                            <input type="text" id="editPosisi" placeholder="Contoh: Tunggal Putra, Ganda Putra">
+                            <label>Posisi Pemain</label>
+                            <div class="checkbox-group" id="editPosisiGroup">
+                                <label><input type="checkbox" value="Tunggal Putra"> Tunggal Putra</label>
+                                <label><input type="checkbox" value="Tunggal Putri"> Tunggal Putri</label>
+                                <label><input type="checkbox" value="Ganda Putra"> Ganda Putra</label>
+                                <label><input type="checkbox" value="Ganda Putri"> Ganda Putri</label>
+                                <label><input type="checkbox" value="Ganda Campuran"> Ganda Campuran</label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Upload Foto Profil</label>
+                            <input type="file" id="editFoto" accept="image/*">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Ubah Password</label>
+                            <input type="password" id="editPassword" placeholder="Biarkan kosong jika tidak ingin mengubah password">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
                             <button type="submit" class="btn" style="width: 100%;">Simpan Perubahan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Registrasi Akun -->
+    <div class="modal-overlay" id="registerModal" onclick="closeRegisterModal(event)">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Registrasi Akun</h3>
+                <button class="close-modal" onclick="hideRegisterModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm" onsubmit="handleRegistration(event)">
+                    <div class="profile-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Nama Lengkap</label>
+                            <input type="text" id="regNama" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Password</label>
+                            <input type="password" id="regPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tempat, Tanggal Lahir</label>
+                            <input type="text" id="regTTL" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Usia</label>
+                            <input type="text" id="regUsia" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Sekolah</label>
+                            <input type="text" id="regSekolah" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Alamat</label>
+                            <textarea id="regAlamat" rows="3" required style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Club</label>
+                            <input type="text" id="regClub" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tinggi Badan</label>
+                            <input type="text" id="regTinggi" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Lama Latihan</label>
+                            <input type="text" id="regLama" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Level Atlet</label>
+                            <select id="regLevel">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kelemahan Utama</label>
+                            <select id="regKelemahan">
+                                <option value="Forehand">Forehand</option>
+                                <option value="Backhand">Backhand</option>
+                                <option value="Service">Service</option>
+                                <option value="Volley">Volley</option>
+                                <option value="Half Volley">Half Volley</option>
+                                <option value="Drive Volley">Drive Volley</option>
+                                <option value="Slice">Slice</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Posisi Pemain</label>
+                            <div class="checkbox-group" id="regPosisiGroup">
+                                <label><input type="checkbox" value="Tunggal Putra"> Tunggal Putra</label>
+                                <label><input type="checkbox" value="Tunggal Putri"> Tunggal Putri</label>
+                                <label><input type="checkbox" value="Ganda Putra"> Ganda Putra</label>
+                                <label><input type="checkbox" value="Ganda Putri"> Ganda Putri</label>
+                                <label><input type="checkbox" value="Ganda Campuran"> Ganda Campuran</label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
+                            <button type="submit" class="btn" style="width: 100%;">Daftar Akun</button>
                         </div>
                     </div>
                 </form>
@@ -589,9 +1065,43 @@
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script type="text/javascript" src="apiClient.js"></script>
     <script type="text/javascript" src="dataMateri.js"></script>
     <script type="text/javascript" src="dataAkun.js"></script>
+    <script type="text/javascript" src="dataLatihan.js"></script>
+    <script type="text/javascript" src="ekstraksi_jadwal-2.js"></script>
+    <script type="text/javascript" src="latihanLogic.js"></script>
     <script>
+        // --- GLOBAL LOADER ---
+        function showLoading() {
+            const loader = document.getElementById('globalLoader');
+            if(loader) loader.classList.add('active');
+        }
+        function hideLoading() {
+            const loader = document.getElementById('globalLoader');
+            if(loader) loader.classList.remove('active');
+        }
+
+        // --- CUSTOM NOTIFICATION ---
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            notif.className = 'notification-box' + (type === 'error' ? ' error' : '');
+            
+            notif.innerHTML = `
+                <div class="notification-content">${message}</div>
+                <button class="notif-btn" onclick="this.parentElement.style.animation='fadeOut 0.3s forwards'; setTimeout(() => this.parentElement.remove(), 300)">Oke</button>
+            `;
+            container.appendChild(notif);
+        }
+
         // --- NAVIGASI SPA & HAMBURGER MENU ---
         const navLinks = document.querySelectorAll('.nav-links a');
         const sections = document.querySelectorAll('.section');
@@ -621,8 +1131,19 @@
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
+            // Render grafik if target is grafik-riwayat
+            if (targetId === 'grafik-riwayat' && typeof renderGrafikRiwayat === 'function') {
+                renderGrafikRiwayat();
+            }
+
             // Auto close mobile menu
             navLinksContainer.classList.remove('active');
+
+            if (targetId === 'latihan') {
+                if (typeof renderLatihanSection === 'function') {
+                    renderLatihanSection();
+                }
+            }
 
             // History API untuk pushState
             if (pushHistory) {
@@ -701,29 +1222,41 @@
         function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
-            
-            if(!email || !pass) {
-                alert("Harap isi email dan kata sandi.");
-                return;
+
+            // Cek di dataAtlet
+            let user = dataAtlet.find(a => a.email === email && a.kata_sandi === pass);
+            let role = 'atlet';
+
+            // Jika tidak ada di dataAtlet, cek di dataPelatih
+            if (!user && typeof dataPelatih !== 'undefined') {
+                user = dataPelatih.find(p => p.email === email && p.kata_sandi === pass);
+                if (user) {
+                    role = 'pelatih';
+                }
             }
 
-            const user = dataAtlet.find(a => a.email === email && a.kata_sandi === pass);
-            
-            if (user) {
+            if(user) {
+                user.role = role; // set role explicitly
                 sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-                alert("Login berhasil!");
+                showNotification("Login berhasil!", "success");
                 checkAuth();
                 renderProfil();
-                navigateTo('profil');
+                
+                // Arahkan sesuai role
+                if (role === 'pelatih') {
+                    navigateTo('latihan');
+                } else {
+                    navigateTo('profil');
+                }
             } else {
-                alert("Email atau kata sandi salah.");
+                showNotification("Email atau Password salah!", "error");
             }
         }
 
         function handleLogout() {
             sessionStorage.removeItem('loggedInUser');
             checkAuth();
-            alert("Anda telah keluar.");
+            showNotification("Anda telah keluar.", "success");
             navigateTo('beranda');
         }
 
@@ -740,10 +1273,15 @@
                 tinggi += ' cm';
             }
 
+            let fotoUrl = user.foto;
+            if (fotoUrl && !fotoUrl.startsWith('http') && !fotoUrl.startsWith('blob:')) {
+                fotoUrl = `${SERVER_BASE}/${fotoUrl}`;
+            }
+
             container.innerHTML = `
                 <div class="ktp-card">
                     <div class="ktp-photo">
-                        <img src="${user.foto}" alt="Foto ${user.nama_atlet}" onerror="this.src='https://via.placeholder.com/250x350?text=Tanpa+Foto'">
+                        <img src="${fotoUrl}" alt="Foto ${user.nama_atlet}" onerror="this.src='https://via.placeholder.com/250x350?text=Tanpa+Foto'">
                     </div>
                     <div class="ktp-details">
                         <div class="ktp-row" style="grid-column: 1 / -1; margin-bottom: 0.5rem;">
@@ -778,6 +1316,10 @@
                             <span class="ktp-label">Posisi Pemain</span>
                             <span class="ktp-value">${user.posisi_pemain.join(' / ')}</span>
                         </div>
+                        <div class="ktp-row" style="grid-column: 1 / -1;">
+                            <span class="ktp-label">Alamat</span>
+                            <span class="ktp-value">${user.alamat || '-'}</span>
+                        </div>
                         <div class="ktp-row" style="grid-column: 1 / -1; margin-top: 1rem;">
                             <button class="btn" onclick="openEditModal()" style="padding: 0.6rem 1.5rem; font-size: 0.95rem; width: max-content;">Edit Profil</button>
                         </div>
@@ -792,15 +1334,26 @@
             if(!userStr) return;
             const user = JSON.parse(userStr);
 
-            document.getElementById('editNama').value = user.nama_atlet;
-            document.getElementById('editEmail').value = user.email;
-            document.getElementById('editTTL').value = user.ttl;
-            document.getElementById('editClub').value = user.club;
+            document.getElementById('editNama').value = user.nama_atlet || user.nama_pelatih || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editTTL').value = user.ttl || '';
+            document.getElementById('editUsia').value = user.usia || '';
+            document.getElementById('editSekolah').value = user.sekolah || '';
+            document.getElementById('editAlamat').value = user.alamat || '';
+            document.getElementById('editClub').value = user.club || '';
             document.getElementById('editTinggi').value = user.tinggi_badan;
             document.getElementById('editLama').value = user.lama_latihan;
             document.getElementById('editLevel').value = user.level_atlet;
             document.getElementById('editKelemahan').value = user.kelemahan_utama;
-            document.getElementById('editPosisi').value = user.posisi_pemain.join(', ');
+            
+            const posisiCheckboxes = document.querySelectorAll('#editPosisiGroup input[type="checkbox"]');
+            posisiCheckboxes.forEach(cb => {
+                if (user.posisi_pemain.includes(cb.value)) {
+                    cb.checked = true;
+                } else {
+                    cb.checked = false;
+                }
+            });
 
             document.getElementById('editProfileModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -817,50 +1370,182 @@
             }
         }
 
-        function saveProfile(event) {
+        async function saveProfile(event) {
             event.preventDefault();
             
             const userStr = sessionStorage.getItem('loggedInUser');
             if(!userStr) return;
             let user = JSON.parse(userStr);
 
-            // Update local object
-            user.nama_atlet = document.getElementById('editNama').value;
-            user.email = document.getElementById('editEmail').value;
-            user.ttl = document.getElementById('editTTL').value;
-            user.club = document.getElementById('editClub').value;
-            user.tinggi_badan = document.getElementById('editTinggi').value;
-            user.lama_latihan = document.getElementById('editLama').value;
-            user.level_atlet = document.getElementById('editLevel').value;
-            user.kelemahan_utama = document.getElementById('editKelemahan').value;
+            const formData = new FormData();
             
-            // Handle array for posisi
-            const posisiStr = document.getElementById('editPosisi').value;
-            user.posisi_pemain = posisiStr.split(',').map(item => item.trim()).filter(item => item !== "");
+            // Text fields
+            formData.append('nama_atlet', document.getElementById('editNama').value);
+            formData.append('email', document.getElementById('editEmail').value);
+            formData.append('ttl', document.getElementById('editTTL').value);
+            formData.append('usia', document.getElementById('editUsia').value);
+            formData.append('sekolah', document.getElementById('editSekolah').value);
+            formData.append('alamat', document.getElementById('editAlamat').value);
+            formData.append('club', document.getElementById('editClub').value);
+            formData.append('tinggi_badan', document.getElementById('editTinggi').value);
+            formData.append('lama_latihan', document.getElementById('editLama').value);
+            formData.append('level_atlet', document.getElementById('editLevel').value);
+            formData.append('kelemahan_utama', document.getElementById('editKelemahan').value);
 
-            // Save to Session Storage
-            sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-            
-            // Note: Since dataAtlet in dataAkun.js is loaded from a static file, 
-            // the changes only persist in sessionStorage for the duration of the login.
-            // If we want to persist it across re-logins in the same browser, we would use localStorage,
-            // or update the array in memory (but it gets reset on refresh). 
-            // Updating in memory just for consistency:
-            const index = dataAtlet.findIndex(a => a.id_atlet === user.id_atlet);
-            if(index !== -1) {
-                dataAtlet[index] = user;
+            // Array
+            const checkedPosisi = document.querySelectorAll('#editPosisiGroup input[type="checkbox"]:checked');
+            formData.append('posisi_pemain', JSON.stringify(Array.from(checkedPosisi).map(cb => cb.value)));
+
+            // Password
+            const newPassword = document.getElementById('editPassword').value;
+            if (newPassword.trim() !== "") {
+                formData.append('kata_sandi', newPassword);
             }
 
-            hideEditModal();
-            renderProfil();
-            checkAuth(); // update navbar name
+            // Photo
+            const fotoInput = document.getElementById('editFoto');
+            if (fotoInput.files && fotoInput.files[0]) {
+                formData.append('foto', fotoInput.files[0]);
+            }
+
+            showLoading();
+            try {
+                // Menggunakan rute update via POST
+                const res = await fetch(`${API_BASE}/atlet/${user.id_atlet}`, {
+                    method: 'POST',
+                    body: formData // tidak menggunakan Content-Type: application/json
+                });
+                
+                if (res.ok) {
+                    const responseData = await res.json();
+                    if (responseData.upload_warning) {
+                        console.warn("Profil tersimpan namun foto gagal diupload:", responseData.upload_warning);
+                        showNotification("Profil berhasil! Namun: " + responseData.upload_warning, "success");
+                    } else {
+                        showNotification("Profil berhasil diperbarui!", "success");
+                    }
+                    
+                    await fetchAllData();
+                    const updatedUser = dataAtlet.find(a => a.id_atlet === user.id_atlet) || user;
+                    sessionStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+                    
+                    hideEditModal();
+                    renderProfil();
+                    checkAuth(); 
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    const errorMsg = errData.error || "Gagal memperbarui profil.";
+                    if (errData.warning) console.warn("Peringatan Foto:", errData.warning);
+                    showNotification(errorMsg, "error");
+                }
+            } catch (err) {
+                console.error("Kesalahan koneksi profil:", err);
+                showNotification(err.message || "Terjadi kesalahan koneksi.", "error");
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // --- REGISTRASI LOGIC ---
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideRegisterModal() {
+            document.getElementById('registerModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeRegisterModal(event) {
+            if (event.target.id === 'registerModal') {
+                hideRegisterModal();
+            }
+        }
+
+        async function handleRegistration(event) {
+            event.preventDefault();
             
-            alert("Profil berhasil diperbarui!");
+            const email = document.getElementById('regEmail').value;
+            
+            // Cek apakah email sudah ada
+            const isEmailExist = dataAtlet.some(a => a.email === email);
+            if (isEmailExist) {
+                showNotification("Email sudah terdaftar. Silakan gunakan email lain.", "error");
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('id_atlet', "atlet_" + Date.now());
+            formData.append('nama_atlet', document.getElementById('regNama').value);
+            formData.append('email', email);
+            formData.append('kata_sandi', document.getElementById('regPassword').value);
+            formData.append('ttl', document.getElementById('regTTL').value);
+            formData.append('usia', document.getElementById('regUsia').value);
+            formData.append('sekolah', document.getElementById('regSekolah').value);
+            formData.append('alamat', document.getElementById('regAlamat').value);
+            formData.append('club', document.getElementById('regClub').value);
+            formData.append('tinggi_badan', document.getElementById('regTinggi').value);
+            formData.append('lama_latihan', document.getElementById('regLama').value);
+            formData.append('level_atlet', document.getElementById('regLevel').value);
+            formData.append('kelemahan_utama', document.getElementById('regKelemahan').value);
+
+            const regCheckedPosisi = document.querySelectorAll('#regPosisiGroup input[type="checkbox"]:checked');
+            formData.append('posisi_pemain', JSON.stringify(Array.from(regCheckedPosisi).map(cb => cb.value)));
+
+            // (Opsional) Jika ada input foto di modal registrasi:
+            // const regFoto = document.getElementById('regFoto');
+            // if (regFoto && regFoto.files && regFoto.files[0]) {
+            //     formData.append('foto', regFoto.files[0]);
+            // }
+
+            showLoading();
+            try {
+                const res = await fetch(`${API_BASE}/atlet`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (res.ok) {
+                    const responseData = await res.json();
+                    if (responseData.upload_warning) {
+                        console.warn("Akun terbuat namun foto gagal diupload:", responseData.upload_warning);
+                        showNotification("Registrasi berhasil! Namun: " + responseData.upload_warning, "success");
+                    } else {
+                        showNotification("Registrasi berhasil! Silakan login.", "success");
+                    }
+                    
+                    await fetchAllData();
+                    hideRegisterModal();
+                    
+                    // Reset form
+                    event.target.reset();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    const errorMsg = errData.error || "Gagal melakukan registrasi.";
+                    if (errData.warning) console.warn("Peringatan Foto:", errData.warning);
+                    showNotification(errorMsg, "error");
+                }
+            } catch (err) {
+                console.error("Kesalahan koneksi registrasi:", err);
+                showNotification(err.message || "Terjadi kesalahan koneksi.", "error");
+            } finally {
+                hideLoading();
+            }
         }
 
         // Initialize App
-        checkAuth();
-        renderProfil();
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Tampilkan loading screen sementara fetch (opsional)
+            await fetchAllData();
+            
+            checkAuth();
+            renderProfil();
+            
+            if (typeof dataBab !== 'undefined') {
+                initMateri();
+            }
+        });
 
         // --- CAROUSEL SWIPER ---
         var swiper = new Swiper(".mySwiper", {
@@ -888,21 +1573,13 @@
 
         // --- KALENDER (READ-ONLY) ---
         const calendarGrid = document.getElementById('calendarGrid');
-        let currentMonth = 4; // Mei (0-indexed, Jan=0)
+        let currentMonth = 5; // Juni (0-indexed, Jan=0)
         let currentYear = 2026;
         
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const weekdayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
         
-        // Dummy data latihan
-        const trainingData = {
-            "2026-05-03": { title: "Latihan Rutin", detail: "Teknik Dasar & Akurasi <em>Forehand</em>", duration: "180 Menit", type: "rutin" },
-            "2026-05-06": { title: "Latihan Rutin", detail: "Fisik, Kelincahan, Daya Tahan", duration: "120 Menit", type: "rutin" },
-            "2026-05-10": { title: "Latihan Rutin", detail: "<em>Rally</em> & Konsistensi Pukulan", duration: "180 Menit", type: "rutin" },
-            "2026-05-15": { title: "Latih Tanding", detail: "Simulasi Pertandingan Internal (<em>Single & Double</em>)", duration: "180 Menit", type: "special" },
-            "2026-05-17": { title: "Latihan Rutin", detail: "Teknik Servis & <em>Volley</em>", duration: "180 Menit", type: "rutin" },
-            "2026-05-20": { title: "Latihan Khusus", detail: "Penguatan Mental Bertanding", duration: "120 Menit", type: "special" },
-        };
+        // Data latihan menggunakan dataJadwal dari ekstraksi_jadwal-2.js
 
         function renderCalendar(month, year) {
             document.getElementById('monthYearDisplay').innerText = `${monthNames[month]} ${year}`;
@@ -937,10 +1614,13 @@
                 
                 let innerHTML = `<div class="date-num">${day}</div>`;
                 
-                if (trainingData[dateKey]) {
-                    const data = trainingData[dateKey];
-                    const specialClass = data.type === 'special' ? 'special' : '';
-                    innerHTML += `<div class="training-badge ${specialClass}" onclick="openModal('${dateKey}')">${data.title}</div>`;
+                if (typeof dataJadwal !== 'undefined') {
+                    const data = dataJadwal.find(j => j.tanggal === dateKey);
+                    if (data) {
+                        const isSimulasi = data.simulasi.toLowerCase().includes('full set') || data.simulasi.toLowerCase().includes('game');
+                        const specialClass = isSimulasi ? 'special' : '';
+                        innerHTML += `<div class="training-badge ${specialClass}" onclick="openModal('${dateKey}')">Jadwal Latihan</div>`;
+                    }
                 }
 
                 cell.innerHTML = innerHTML;
@@ -964,18 +1644,25 @@
         const modal = document.getElementById('calendarModal');
         
         function openModal(dateKey) {
-            const data = trainingData[dateKey];
+            if (typeof dataJadwal === 'undefined') return;
+            const data = dataJadwal.find(j => j.tanggal === dateKey);
+            
             if (data) {
                 // Format Tanggal untuk ditampilkan
                 const dateObj = new Date(dateKey);
-                const formattedDate = `${weekdayNames[dateObj.getDay()]}, ${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+                const formattedDate = `${data.hari}, ${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 
-                document.getElementById('modalTitle').innerText = data.title;
+                document.getElementById('modalTitle').innerText = "Rincian Jadwal Latihan";
                 document.getElementById('modalBody').innerHTML = `
                     <p><strong>Tanggal:</strong> ${formattedDate}</p>
-                    <p><strong>Tipe Latihan:</strong> ${data.type === 'special' ? 'Latihan Khusus / Tambahan' : 'Latihan Rutin'}</p>
-                    <p><strong>Fokus/Materi:</strong> ${data.detail}</p>
-                    <p><strong>Durasi:</strong> ${data.duration}</p>
+                    <p><strong>Sesi Waktu:</strong> ${data.sesi}</p>
+                    <p><strong>Tempat:</strong> ${data.tempat}</p>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+                    <p><strong>Pemanasan:</strong><br/>${data.pemanasan}</p>
+                    <p><strong>Latihan Penunjang/Fisik:</strong><br/>${data.latihan}</p>
+                    <p><strong>Latihan Utama:</strong><br/>${data.utama}</p>
+                    <p><strong>Simulasi / Game:</strong><br/>${data.simulasi}</p>
+                    <p><strong>Evaluasi & Pendinginan:</strong><br/>${data.evaluasi}</p>
                 `;
                 modal.classList.add('active');
             }
@@ -1178,11 +1865,7 @@
             navigateTo('materi-detail');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof dataBab !== 'undefined') {
-                initMateri();
-            }
-        });
+        // Init Materi digabung dengan App Initialize di atas
     </script>
 </body>
 </html>
