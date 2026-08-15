@@ -1273,10 +1273,10 @@
                 tinggi += ' cm';
             }
 
-            let fotoUrl = user.foto;
-            if (fotoUrl && !fotoUrl.startsWith('http') && !fotoUrl.startsWith('blob:')) {
-                fotoUrl = `${SERVER_BASE}/${fotoUrl}`;
-            }
+            let fotoUrl = `${SERVER_BASE}/${user.foto}`;
+            //if (fotoUrl && !fotoUrl.startsWith('http') && !fotoUrl.startsWith('blob:')) {
+            //    fotoUrl = `${SERVER_BASE}/${fotoUrl}`;
+            //}
 
             container.innerHTML = `
                 <div class="ktp-card">
