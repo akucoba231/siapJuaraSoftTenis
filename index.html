@@ -1274,9 +1274,9 @@
             }
 
             let fotoUrl = `${SERVER_BASE}/${user.foto}`;
-            //if (fotoUrl && !fotoUrl.startsWith('http') && !fotoUrl.startsWith('blob:')) {
-            //    fotoUrl = `${SERVER_BASE}/${fotoUrl}`;
-            //}
+            // if (fotoUrl && !fotoUrl.startsWith('http') && !fotoUrl.startsWith('blob:')) {
+            //     fotoUrl = `${SERVER_BASE}/${fotoUrl}`;
+            // }
 
             container.innerHTML = `
                 <div class="ktp-card">
@@ -1844,6 +1844,34 @@
             }
             praktikHtml += '</div>';
 
+            // untuk gambar
+            // id adalah kunci, id ada 2 pakai titik dan pakai strip
+
+            let idFoto = id.split('-');
+            let folder = "";
+            let foto = [];
+            let finalFoto = "";
+            if(idFoto.length > 1){
+                
+                let tmpBab = idFoto[0].split('bab')[1];
+                folder = tmpBab;
+                let tmpSub = idFoto[1];
+                foto = [tmpBab, tmpSub];
+            }
+            else {
+                idFoto = idFoto[0].split('.');
+                
+                let tmpBab = idFoto[0].split('bab');
+                tmpBab = tmpBab.length > 1 ? tmpBab[1] : tmpBab[0];
+                folder = tmpBab;
+                let tmpSub = idFoto[1];
+                foto = [tmpBab, tmpSub];   
+            }
+
+            finalFoto = `./assets/${foto.join('.')}.png`;
+            console.log(finalFoto);
+
+
             container.innerHTML = `
                 <div class="detail-header">
                     <h2>${materi.judul}</h2>
@@ -1851,7 +1879,8 @@
                 </div>
                 
                 <div class="media-placeholder">
-                    ${materi.foto ? 'Foto tersedia' : 'Foto ilustrasi (Belum Tersedia)'}
+                    <!--${materi.foto ? 'Foto tersedia' : 'Foto ilustrasi (Belum Tersedia)'}-->
+                    <img style="height: 100%;" src="${finalFoto}" alt="gambar ilustrasi" />
                 </div>
                 
                 ${latihanHtml}
