@@ -1,3 +1,434 @@
+let bab_4 = [
+  {
+    "bab": "bab4",
+    "id": "bab4-1",
+    "judul": "Ayunan (Swing)",
+    "latihan": {
+      "pemain": "berapapun jumlah pemain",
+      "standar": "4",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Mendorong ayunan pada pukulan dasar",
+      "keterangan": [
+        "Pemain berdiri 2-3 meter dari jaring penahan, melambungkan bola sendiri, dan memukul keras ke pagar - cobalah untuk membuat bola menempel."
+      ],
+      "tip": "Guru mungkin perlu membantu penempatan bola umpan untuk memastikan jarak yang benar dari tubuh.",
+      "skor": "Siapa yang pertama kali berhasil memukul sejumlah bola mengenai jaring di antara tinggi net dan 2,5 meter."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-2",
+    "judul": "Umpan dan Pukul (Feed and Hit)",
+    "latihan": {
+      "pemain": "2 hingga 6 pemain",
+      "standar": "6",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Untuk melatih pukulan dasar",
+      "keterangan": [
+        "Lemparan umpan dari bawah net - bawa pemukul maju dari garis belakang jika umpan terlalu pendek untuk dapat dipukul dengan akurat.",
+        "Dapat digunakan untuk latihan pukulan drive forehand atau backhand."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-3",
+    "judul": "Umpan dan Pukul Beregu (Team Feed and Hit)",
+    "latihan": {
+      "pemain": "3 hingga 15 pemain",
+      "standar": "12",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Mendorong ayunan pada pukulan dasar",
+      "keterangan": [
+        "Pengumpan melemparkan bola secara bergiliran kepada pemukul yang kemudian pergi ke barisan paling belakang setelah setiap pukulan.",
+        "Pengumpul bola menangkap setiap bola sebelum pantulan kedua dan mengembalikannya ke pengumpan."
+      ],
+      "skor": "Satu poin untuk setiap pukulan yang memantul di antara garis servis dan garis belakang."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-4",
+    "judul": "Pukulan Drive untuk Akurasi dan Kedalaman (Driving for Accuracy and Length)",
+    "latihan": {
+      "pemain": "3 hingga 9 pemain",
+      "standar": "6",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Mendorong pukulan drive yang akurat dan dalam",
+      "keterangan": [
+        "Umpan lemparan tangan ke pemukul yang memukul bola mengarah ke penangkap untuk ditangkap atau disentuh pada ketinggian bahu."
+      ],
+      "skor": "Satu poin untuk setiap pukulan yang berhasil dipukul dan ditangkap atau disentuh."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-5",
+    "judul": "Reli dengan Guru (Rally with Teacher)",
+    "latihan": {
+      "pemain": "2 hingga 8 pemain",
+      "standar": "8",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Mengembangkan situasi reli",
+      "keterangan": [
+        "Guru dengan 4 pemain di setengah lapangan melakukan reli dengan masing-masing pemain secara bergiliran.",
+        "Atur latihan alternatif di setengah lapangan lainnya."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-6",
+    "judul": "Membangun Reli (Rally Building)",
+    "latihan": {
+      "pemain": "2 hingga 6 pemain",
+      "standar": "4",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Mengembangkan reli dengan durasi yang terus meningkat",
+      "keterangan": [
+        "Guru memberi umpan dan mempertahankan reli yang mudah dengan murid secara bergiliran, pertama dengan 2 pukulan, lalu 4, 6, 8, 10, dst.",
+        "Jika pemain mencapai target angka pukulan, ia mencoba target berikutnya pada giliran berikutnya."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-7",
+    "judul": "Nyawa Lawan Guru (Lives Against Teacher)",
+    "latihan": {
+      "pemain": "6 hingga 12 pemain",
+      "standar": "6",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Permainan yang menyenangkan; melatih konsistensi pukulan dasar dan mobilitas",
+      "keterangan": [
+        "Guru memberi umpan kepada pemain secara bergiliran yang melakukan satu pukulan lalu berlari memutari lapangan untuk bergabung kembali ke antrean."
+      ],
+      "skor": "Satu 'nyawa' hilang setiap kali pemain membuat kesalahan, pemain akan keluar dari permainan setelah kehilangan tiga nyawa.",
+      "tip": "Nyawa dapat diperoleh kembali oleh pemain jika ia berhasil menangkap bola saat bertugas sebagai pengumpul bola."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-8",
+    "judul": "Lari Memutar Nyawa (Run Round Lives)",
+    "latihan": {
+      "pemain": "6 hingga 16 pemain",
+      "standar": "8",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Permainan yang menyenangkan; melatih konsistensi pukulan dasar dan mobilitas",
+      "keterangan": [
+        "Pemain memukul bola dan berlari untuk bergabung di belakang antrean lawan. Reli terus berlanjut.",
+        "Saat terjadi kesalahan, bola umpan tambahan diberikan baik oleh guru atau pemain berikutnya yang mendapat giliran memukul."
+      ],
+      "skor": "Setiap pemain punya 3 'nyawa', satu nyawa hilang untuk setiap kesalahan yang dibuat."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-9",
+    "judul": "Pukulan Drive Sambil Berlari (Running Drive)",
+    "latihan": {
+      "pemain": "8 hingga 12 pemain",
+      "standar": "8",
+      "level": "menengah - mahir"
+    },
+    "praktik": {
+      "tujuan": "Memukul pukulan dasar ke arah lebar lapangan sambil berlari",
+      "keterangan": [
+        "Guru memberi umpan bergantian ke antrean yang menunggu.",
+        "Pemain paling depan memukul pukulan lebar yang diumpankan sambil berlari, lalu lari untuk bergabung ke ujung antrean berlawanan."
+      ],
+      "skor": "Satu poin untuk setiap pukulan yang berhasil masuk ke dalam lapangan.",
+      "variasi": "Guru memberi umpan dari sisi lapangan yang lain (misal: memberikan umpan ke arah backhand daripada forehand bagi pemain tidak kidal)."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-10",
+    "judul": "Reli Sepuluh (Rally Ten)",
+    "latihan": {
+      "pemain": "2 hingga 6 pemain (jika lebih banyak gunakan tim)",
+      "standar": "6",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Progresi reli sederhana",
+      "keterangan": [
+        "Pemain bermain reli sampai mereka mencetak angka sepuluh di stasiun 1, lalu berpindah ke stasiun 2, 3 dan 4."
+      ],
+      "variasi": [
+        "Tingkatkan target reli menjadi 15 atau 20, dll.",
+        "Mulai permainan dengan target angka yang lebih rendah dan terus bertambah."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-11",
+    "judul": "Latihan Target (Target Practice)",
+    "latihan": {
+      "pemain": "3 hingga 12 pemain",
+      "standar": "8",
+      "level": "menengah - mahir"
+    },
+    "praktik": {
+      "tujuan": "Permainan menyenangkan untuk mengembangkan akurasi pukulan dasar",
+      "keterangan": [
+        "Guru memberi umpan bola secara bergantian ke antrean yang berlawanan.",
+        "Pemain mencoba mengenai target, lalu berlari untuk bergabung dengan antrean di seberangnya."
+      ],
+      "skor": "Satu poin untuk setiap bola yang mengenai target."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-12",
+    "judul": "Skittles",
+    "latihan": {
+      "pemain": "9, 12, atau 15 pemain",
+      "standar": "12",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Pengembangan akurasi",
+      "keterangan": [
+        "Pemukul menargetkan pemain sasaran yang mencoba menangkap bola tanpa memindahkan kaki mereka.",
+        "Pemain sasaran dapat menangkap bola sebelum pantulan, di tengah lapangan sebelum atau sesudah pantulan, dan di garis belakang setelah pantulan.",
+        "Pemain meninggalkan lapangan setelah berhasil menangkap bola."
+      ],
+      "skor": "Berapa banyak 'skittles' (pemain sasaran) yang bisa dijatuhkan pemukul secara individu atau sebagai sebuah tim."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-13",
+    "judul": "Piramida (Pyramids)",
+    "latihan": {
+      "pemain": "4, 8, atau 12 pemain",
+      "standar": "8",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Konsistensi dalam situasi permainan",
+      "keterangan": [
+        "Pemain dibagi ke dalam dua tim, masing-masing membawa kotak berisi 4-6 bola.",
+        "Pasangan pertama dari setiap tim mencoba melakukan reli dengan sejumlah pukulan tertentu.",
+        "Jika berhasil, mereka menempatkan bola di kotak lawan. Jika gagal, upaya lain dilakukan dengan bola yang sama.",
+        "Ganti giliran ke pasangan berikutnya setelah tiga kali percobaan."
+      ],
+      "skor": "Tim yang menang adalah tim yang pertama kali berhasil mengosongkan kotak mereka."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-14",
+    "judul": "Target Berdasarkan Angka (Targets by Number)",
+    "latihan": {
+      "pemain": "2 hingga 6 pemain",
+      "standar": "4",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Pengembangan akurasi",
+      "keterangan": [
+        "Guru memberi umpan bola dan meneriakkan sebuah angka yang sesuai dengan area target di lapangan yang harus dipukul oleh pemain."
+      ],
+      "variasi": [
+        "Gunakan area target yang lebih besar atau lebih kecil.",
+        "Umpan ke arah area tertentu."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-15",
+    "judul": "Reli Zig-Zag (Zig-Zag Rally)",
+    "latihan": {
+      "pemain": "4 hingga 16 pemain",
+      "standar": "16",
+      "level": "menengah - mahir"
+    },
+    "praktik": {
+      "tujuan": "Kontrol pada pukulan forehand dan backhand",
+      "keterangan": [
+        "Murid mempertahankan reli, memainkan satu pukulan kemudian bergabung kembali ke belakang antrean."
+      ],
+      "skor": "Satu poin untuk setiap putaran yang berhasil diselesaikan (kompetisi tim antar lapangan) atau poin individu yang diperoleh/hilang untuk setiap pukulan yang berhasil/gagal."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-16",
+    "judul": "Latihan Tekanan Disederhanakan (Simplified Pressure Training)",
+    "latihan": {
+      "pemain": "3 hingga 6 pemain",
+      "standar": "4",
+      "level": "pemula - menengah"
+    },
+    "praktik": {
+      "tujuan": "Memukul pukulan dasar di bawah tekanan",
+      "keterangan": [
+        "Umpan bola dari sisi ke sisi untuk mensimulasikan reli yang berkelanjutan dengan jumlah bola atau durasi waktu tertentu.",
+        "Hitung ritme waktu umpan sehingga bola sebelumnya telah dipukul saat bola berikutnya mulai diberikan."
+      ],
+      "variasi": [
+        "Bola diumpan ke berbagai variasi lebar dan kedalaman lapangan.",
+        "Pukul ke area target: i) di kotak servis, ii) antara garis servis dan garis belakang, iii) ke dalam lingkaran (hoops), dll."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-17",
+    "judul": "Rotasi (Rotation)",
+    "latihan": {
+      "pemain": "4 hingga 8 pemain",
+      "standar": "5",
+      "level": "menengah - mahir"
+    },
+    "praktik": {
+      "tujuan": "Tekanan pukulan dasar dengan ukuran kelompok yang bervariasi",
+      "keterangan": [
+        "Pasangan pengumpan mempertahankan reli dengan satu pemain, lalu mengulang kembali jika reli gagal.",
+        "Saat pemain tunggal tersebut membuat kesalahan, semua orang berotasi bergeser satu posisi."
+      ],
+      "skor": "Salah satu pemain yang sedang beristirahat menghitung jumlah pukulan sukses yang dilakukan oleh pemain tunggal tersebut."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-18",
+    "judul": "Pelaku Reli dan Pelari (Rallyers and Runners)",
+    "latihan": {
+      "pemain": "4 hingga 12 pemain",
+      "standar": "9",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Reli untuk konsistensi dengan memasukkan elemen kebugaran",
+      "keterangan": [
+        "Satu pasangan mencoba mendapatkan rekor reli tertinggi sementara pemain sisanya berlari mengelilingi lapangan secara estafet.",
+        "Pasangan berikutnya mencoba untuk mengalahkan rekor skor tersebut."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-19",
+    "judul": "Reli Tertinggi (Highest Rally)",
+    "latihan": {
+      "pemain": "2 hingga 12 pemain",
+      "standar": "12",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Konsistensi dalam melakukan reli ke sebuah area target",
+      "keterangan": [
+        "Setiap pasangan mempertahankan reli di area setengah lapangan. Ganti ke pasangan berikutnya jika reli terputus."
+      ],
+      "skor": "Reli terus berlanjut namun hanya bola yang mendarat di area target yang dihitung - bidik untuk mendapat jumlah reli tertinggi.",
+      "variasi": "Melakukan reli menyilang lapangan (cross-court)."
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-20",
+    "judul": "Kriket (Cricket)",
+    "latihan": {
+      "pemain": "2 hingga 12 pemain",
+      "standar": "8",
+      "level": "semua standar"
+    },
+    "praktik": {
+      "tujuan": "Mengembangkan konsistensi",
+      "keterangan": [
+        "Pemain mempertahankan reli secara berpasangan atau dalam tim."
+      ],
+      "skor": [
+        "Satu 'run' dicetak setiap kali bola mengenai dan melewati net.",
+        "Satu gawang (wicket) hilang setiap kali pemain membuat kesalahan.",
+        "Dengan total 10 gawang, pertandingan dimenangkan oleh tim (pasangan) dengan perolehan 'run' total tertinggi."
+      ]
+    },
+    "foto": "",
+    "video": ""
+  },
+  {
+    "bab": "bab4",
+    "id": "bab4-21",
+    "judul": "Kedalaman (Depth)",
+    "latihan": {
+      "pemain": "6 hingga 16 pemain",
+      "standar": "9",
+      "level": "menengah - mahir"
+    },
+    "praktik": {
+      "tujuan": "Mengembangkan kedalaman pada pukulan dasar",
+      "keterangan": [
+        "Pengumpan memberikan umpan dan melanjutkan reli dengan tim yang melakukan satu pukulan dalam satu waktu.",
+        "Ganti pengumpan ketika pukulan berhasil mengenai target. Gunakan umpan satu bola jika dirasa perlu."
+      ],
+      "skor": "Satu poin untuk setiap pukulan yang mengenai target - mainkan hingga mencapai angka tertentu yang telah disepakati."
+    },
+    "foto": "",
+    "video": ""
+  }
+]
+
 let bab_5 = [
   {
     "id_materi": "5.1",
@@ -992,7 +1423,7 @@ let bab_8 = [
     },
     "praktik": {
       "keterangan": [
-        "Di setengah lapangan, pemain voli memainkan poin melawan pukulan dasar (groundstrokes) secara bergiliran.",
+        "Di setengah lapangan, pemain voli memainkan poin melawan pukulan dasar secara bergiliran.",
         "Ganti pemain voli setiap 2 menit."
       ],
       "skor": "1 poin untuk setiap poin yang berhasil dimenangkan oleh pemain voli."
@@ -2124,8 +2555,12 @@ let bab_11 = [
   }
 ]
 
-let dataMateri = [...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
+let dataMateri = [...bab_4,...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
 let dataBab = [
+	{
+		"id_bab" : "bab4",
+		"judul_bab" : "Pukulan Dasar"
+	},
 	{
 		"id_bab" : "bab5",
 		"judul_bab" : "Servis"
