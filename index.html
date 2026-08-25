@@ -1867,8 +1867,12 @@
                 let tmpSub = idFoto[1];
                 foto = [tmpBab, tmpSub];   
             }
-
-            finalFoto = `./assets/${foto.join('.')}.png`;
+            if(foto[0] == "4"){
+                finalFoto = `./assets/${foto.join('.')}.PNG`;
+            }
+            else {
+                finalFoto = `./assets/${foto.join('.')}.png`;
+            }
             console.log(finalFoto);
 
 
