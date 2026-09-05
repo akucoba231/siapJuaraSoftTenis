@@ -386,6 +386,10 @@
         .white {
             color: #fff;
         }
+
+        .sembunyikan {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -415,7 +419,7 @@
             <li><a data-target="beranda" class="active">Beranda</a></li>
             <li><a data-target="materi">Materi</a></li>
             <li><a data-target="jadwal">Jadwal</a></li>
-            <li><a data-target="dokumentasi">Dokumentasi</a></li>
+            <li><a data-target="dokumentasi" class="sembunyikan">Dokumentasi</a></li>
             
             <!-- Elemen ini hanya muncul jika SUDAH LOGIN -->
             <li class="nav-auth" style="display: none;">
@@ -463,22 +467,14 @@
             </div>
 
             <!-- Jadwal Latihan Preview -->
-            <div class="card">
+            <div class="card" style="text-align: center;">
                 <h2 class="section-title">Jadwal Latihan Terdekat</h2>
-                <div class="calendar-wrapper">
-                    <div class="calendar-nav">
-                        <button id="prevMonth" onclick="changeMonth(-1)">&#8592; Sebelumnya</button>
-                        <h3 id="monthYearDisplay" class="white">Bulan Tahun</h3>
-                        <button id="nextMonth" onclick="changeMonth(1)">Berikutnya &#8594;</button>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Header akan dirender oleh JS, beserta isinya -->
-                    </div>
-                </div>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Cek seluruh agenda dan program latihan Anda di halaman khusus jadwal.</p>
+                <a onclick="navigateTo('jadwal')" class="btn" style="display: inline-block;">Lihat Jadwal Lengkap</a>
             </div>
 
             <!-- Dokumentasi Carousel -->
-            <div class="card">
+            <div class="card sembunyikan">
                 <h2 class="section-title">Galeri Latihan</h2>
                 <!-- Swiper -->
                 <div class="swiper mySwiper">
@@ -535,11 +531,27 @@
             </div>
         </div>
 
-        <!-- JADWAL FULL SECTION (DUMMY) -->
+        <!-- JADWAL FULL SECTION -->
         <div id="jadwal" class="section">
-            <div class="card" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="breadcrumb">
+                <button class="btn-back" onclick="goBackSPA()">&#8592; Kembali</button>
+                <span class="breadcrumb-text">Jadwal Latihan</span>
+            </div>
+            
+            <div class="card">
                 <h2 class="section-title" style="margin-bottom: 1rem;">Kalender Lengkap</h2>
-                <p style="color: var(--text-light); text-align: center; max-width: 600px;">Tampilan kalender jadwal lengkap untuk mengetahui seluruh agenda latihan.</p>
+                <p style="color: var(--text-light); text-align: center; max-width: 600px; margin: 0 auto 2rem auto;">Tampilan kalender jadwal lengkap untuk mengetahui seluruh agenda latihan.</p>
+                
+                <div class="calendar-wrapper">
+                    <div class="calendar-nav">
+                        <button id="prevMonth" onclick="changeMonth(-1)">&#8592; Sebelumnya</button>
+                        <h3 id="monthYearDisplay" class="white">Bulan Tahun</h3>
+                        <button id="nextMonth" onclick="changeMonth(1)">Berikutnya &#8594;</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Header akan dirender oleh JS, beserta isinya -->
+                    </div>
+                </div>
             </div>
         </div>
         <!-- LATIHAN FULL SECTION -->
@@ -1867,7 +1879,10 @@
                 let tmpSub = idFoto[1];
                 foto = [tmpBab, tmpSub];   
             }
-            if(foto[0] == "4"){
+		/*
+            finalFoto = `./assets/${foto.join('.')}.png`;
+		*/
+	     if(foto[0] == "4"){
                 finalFoto = `./assets/${foto.join('.')}.jpg`;
             }
             else {
