@@ -422,7 +422,7 @@
             <li><a data-target="dokumentasi" class="sembunyikan">Dokumentasi</a></li>
             
             <!-- Elemen ini hanya muncul jika SUDAH LOGIN -->
-            <li class="nav-auth" style="display: none;">
+            <li class="nav-auth nav-atlet" style="display: none;">
                 <div class="dropdown" onclick="toggleDropdown(this)">
                     <a style="cursor: pointer;">Latihan &#9662;</a>
                     <div class="dropdown-content">
@@ -431,11 +431,20 @@
                     </div>
                 </div>
             </li>
+            <li class="nav-auth nav-pelatih" style="display: none;">
+                <div class="dropdown" onclick="toggleDropdown(this)">
+                    <a style="cursor: pointer;">Admin &#9662;</a>
+                    <div class="dropdown-content">
+                        <a data-target="manajemen-atlet">Manajemen Atlet</a>
+                        <a data-target="manajemen-nilai">Manajemen Nilai</a>
+                    </div>
+                </div>
+            </li>
             <li class="nav-auth" style="display: none;">
                 <div class="dropdown" onclick="toggleDropdown(this)">
-                    <a class="btn-login" id="userNameDisplay" style="cursor: pointer;">Hay, Atlet &#9662;</a>
+                    <a class="btn-login" id="userNameDisplay" style="cursor: pointer;">Hay, User &#9662;</a>
                     <div class="dropdown-content">
-                        <a data-target="profil">Lihat Profil</a>
+                        <a id="profilButton" data-target="profil">Lihat Profil</a>
                         <a onclick="handleLogout()" style="cursor: pointer;">Logout</a>
                     </div>
                 </div>
@@ -659,6 +668,48 @@
             </div>
         </div>
 
+        <!-- MANAJEMEN ATLET SECTION (PELATIH) -->
+        <div id="manajemen-atlet" class="section">
+            <h2 class="section-title">Manajemen Atlet</h2>
+            <div class="card" style="overflow-x: auto;">
+                <table id="tabelAtlet" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Atlet</th>
+                            <th>Klub/Sekolah</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelAtletBody">
+                        <!-- Data akan dirender via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MANAJEMEN NILAI SECTION (PELATIH) -->
+        <div id="manajemen-nilai" class="section">
+            <h2 class="section-title">Antrean Persetujuan Latihan</h2>
+            <div class="card" style="overflow-x: auto;">
+                <table id="tabelNilai" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Tgl Latihan</th>
+                            <th>Nama Atlet</th>
+                            <th>Materi</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelNilaiBody">
+                        <!-- Data akan dirender via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- LOGIN SECTION -->
         <div id="login" class="section">
             <div class="card" style="max-width: 450px; margin: 0 auto; margin-top: 2rem;">
@@ -686,6 +737,22 @@
             <h2 class="section-title">Profil Akun</h2>
             <div id="profilContainer">
                 <!-- Akan dirender oleh JS -->
+            </div>
+            <div class="card" id="profilNilaiWrapper" style="display: none; margin-top: 1.5rem; overflow-x: auto;">
+                <h3 style="margin-bottom: 1rem;">Riwayat Penilaian Individu</h3>
+                <table id="tabelProfilNilai" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Tgl Latihan</th>
+                            <th>Materi</th>
+                            <th>Status</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelProfilNilaiBody">
+                        <!-- Data akan dirender via JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1089,7 +1156,6 @@
     <script type="text/javascript" src="dataAkun.js"></script>
     <script type="text/javascript" src="dataLatihan.js"></script>
     <script type="text/javascript" src="ekstraksi_jadwal-2.js"></script>
-    <script type="text/javascript" src="latihanLogic.js"></script>
     <script>
         // --- GLOBAL LOADER ---
         function showLoading() {
@@ -1211,6 +1277,8 @@
             const userStr = sessionStorage.getItem('loggedInUser');
             const navAuth = document.querySelectorAll('.nav-auth');
             const navGuest = document.querySelectorAll('.nav-guest');
+            const navAtlet = document.querySelectorAll('.nav-atlet');
+            const navPelatih = document.querySelectorAll('.nav-pelatih');
             
             if (userStr) {
                 const user = JSON.parse(userStr);
@@ -1218,8 +1286,21 @@
                 navAuth.forEach(el => el.style.display = 'inline-block');
                 navGuest.forEach(el => el.style.display = 'none');
                 
+                let firstName = "";
+                if (user.role === 'pelatih') {
+                    console.log("Pelatih Login");
+                    navAtlet.forEach(el => el.style.display = 'none');
+                    navPelatih.forEach(el => el.style.display = 'inline-block');
+                    firstName = user.nama_pelatih ? user.nama_pelatih.split(' ')[0] : 'Admin';
+                    pelatih = true;
+                } else {
+                    navPelatih.forEach(el => el.style.display = 'none');
+                    navAtlet.forEach(el => el.style.display = 'inline-block');
+                    firstName = user.nama_atlet ? user.nama_atlet.split(' ')[0] : 'User';
+                    pelatih = false;
+                }
+                
                 // Set first name for greeting
-                const firstName = user.nama_atlet.split(' ')[0];
                 document.getElementById('userNameDisplay').innerHTML = `Hay, ${firstName} &#9662;`;
                 
                 return user;
@@ -1252,11 +1333,18 @@
                 sessionStorage.setItem('loggedInUser', JSON.stringify(user));
                 showNotification("Login berhasil!", "success");
                 checkAuth();
-                renderProfil();
+                if(pelatih == true){
+                    // sembunyikan profil pelatih
+                    document.getElementById('profilButton').style.display = "none";
+                }
+                else {
+                    renderProfil();
+                    document.getElementById('profilButton').style.display = "inline-block";
+                }
                 
                 // Arahkan sesuai role
                 if (role === 'pelatih') {
-                    navigateTo('latihan');
+                    navigateTo('beranda');
                 } else {
                     navigateTo('profil');
                 }
@@ -1273,11 +1361,24 @@
         }
 
         // --- RENDER PROFIL ---
-        function renderProfil() {
-            const user = checkAuth();
-            if (!user) return;
+        let currentViewedAtletId = null;
+        let pelatih = false;
+        function renderProfil(id_atlet = null) {
+            const loggedInUser = checkAuth();
+            if (!loggedInUser) return;
+            
+            let user = loggedInUser;
+            currentViewedAtletId = user.id_atlet;
+            
+            if (id_atlet && loggedInUser.role === 'pelatih') {
+                user = dataAtlet.find(a => a.id_atlet === id_atlet);
+                if (!user) return;
+                currentViewedAtletId = user.id_atlet;
+                console.log("Pelatih Login??")
+            }
 
             const container = document.getElementById('profilContainer');
+
             
             // Format Tinggi Badan
             let tinggi = user.tinggi_badan;
@@ -1333,7 +1434,7 @@
                             <span class="ktp-value">${user.alamat || '-'}</span>
                         </div>
                         <div class="ktp-row" style="grid-column: 1 / -1; margin-top: 1rem;">
-                            <button class="btn" onclick="openEditModal()" style="padding: 0.6rem 1.5rem; font-size: 0.95rem; width: max-content;">Edit Profil</button>
+                            <button class="btn" onclick="openEditModal(currentViewedAtletId)" style="padding: 0.6rem 1.5rem; font-size: 0.95rem; width: max-content;">Edit Profil</button>
                         </div>
                     </div>
                 </div>
@@ -1341,10 +1442,14 @@
         }
 
         // --- EDIT PROFILE LOGIC ---
-        function openEditModal() {
+        function openEditModal(targetId = null) {
             const userStr = sessionStorage.getItem('loggedInUser');
             if(!userStr) return;
-            const user = JSON.parse(userStr);
+            let user = JSON.parse(userStr);
+            if (targetId && user.role === 'pelatih') {
+                user = dataAtlet.find(a => a.id_atlet === targetId) || user;
+            }
+            document.getElementById('editForm').dataset.targetId = user.id_atlet || user.id_pelatih;
 
             document.getElementById('editNama').value = user.nama_atlet || user.nama_pelatih || '';
             document.getElementById('editEmail').value = user.email || '';
@@ -1552,7 +1657,12 @@
             await fetchAllData();
             
             checkAuth();
-            renderProfil();
+            if(pelatih == true){
+                navigateTo('beranda', false);
+            }
+            else {
+                renderProfil();
+            }
             
             if (typeof dataBab !== 'undefined') {
                 initMateri();
@@ -1879,10 +1989,10 @@
                 let tmpSub = idFoto[1];
                 foto = [tmpBab, tmpSub];   
             }
-		/*
+        /*
             finalFoto = `./assets/${foto.join('.')}.png`;
-		*/
-	     if(foto[0] == "4"){
+        */
+         if(foto[0] == "4"){
                 finalFoto = `./assets/${foto.join('.')}.jpg`;
             }
             else {
@@ -1915,5 +2025,7 @@
 
         // Init Materi digabung dengan App Initialize di atas
     </script>
+    <script type="text/javascript" src="latihanLogic.js"></script>
+    
 </body>
 </html>
