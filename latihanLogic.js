@@ -540,3 +540,139 @@ function switchChartTab(tab) {
     }
 }
 
+
+
+// --- MANAJEMEN ATLET & NILAI (PELATIH) ---
+
+let dtAtlet = null;
+let dtNilai = null;
+let dtProfilNilai = null;
+
+function renderTabelManajemenAtlet() {
+    if (dtAtlet) {
+        dtAtlet.clear().rows.add(dataAtlet).draw();
+        return;
+    }
+    
+    dtAtlet = $('#tabelAtlet').DataTable({
+        data: dataAtlet,
+        columns: [
+            { 
+                data: null, 
+                render: function (data, type, row, meta) { return meta.row + 1; }
+            },
+            { data: 'nama_atlet' },
+            { data: 'club' },
+            { data: 'ttl' },
+            { 
+                data: null,
+                render: function (data, type, row) {
+                    return `<button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="lihatProfilAtlet('${row.id_atlet}')">Profil</button>
+                            <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #dc2626;" onclick="hapusAtlet('${row.id_atlet}')">Hapus</button>`;
+                }
+            }
+        ]
+    });
+}
+
+function lihatProfilAtlet(id_atlet) {
+    if (typeof renderProfil === 'function') {
+        renderProfil(id_atlet);
+        renderProfilNilai(id_atlet);
+        document.getElementById('profilNilaiWrapper').style.display = 'block';
+        navigateTo('profil');
+    }
+}
+
+async function hapusAtlet(id_atlet) {
+    if (!confirm('Apakah Anda yakin ingin menghapus atlet ini?')) return;
+    
+    try {
+        const res = await fetch(`${API_BASE}/atlet/${id_atlet}`, {
+            method: 'DELETE'
+        });
+        if (res.ok) {
+            showNotification('Atlet berhasil dihapus', 'success');
+            await fetchAllData();
+            renderTabelManajemenAtlet();
+        } else {
+            showNotification('Gagal menghapus atlet', 'error');
+        }
+    } catch (err) {
+        showNotification('Terjadi kesalahan koneksi', 'error');
+    }
+}
+
+function renderTabelManajemenNilai() {
+    if (dtNilai) {
+        dtNilai.clear().rows.add(dataLatihan).draw();
+        return;
+    }
+    
+    dtNilai = $('#tabelNilai').DataTable({
+        data: dataLatihan,
+        order: [[0, 'desc']],
+        columns: [
+            { data: 'tanggal_latihan' },
+            { 
+                data: 'id_atlet',
+                render: function(data) {
+                    const atlet = dataAtlet.find(a => a.id_atlet === data);
+                    return atlet ? atlet.nama_atlet : 'Unknown';
+                }
+            },
+            { data: 'materi_latihan' },
+            { data: 'status' },
+            { 
+                data: null,
+                render: function (data, type, row) {
+                    if (row.status === 'diajukan') {
+                        return `<button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="openPelatihLatihanModal('${row.id_latihan}')">Evaluasi</button>`;
+                    }
+                    return `<span style="color: var(--text-light); font-size: 0.8rem;">Sudah dinilai</span>`;
+                }
+            }
+        ]
+    });
+}
+
+function renderProfilNilai(id_atlet) {
+    const riwayat = dataLatihan.filter(d => d.id_atlet === id_atlet && d.status !== 'diajukan');
+    
+    if (dtProfilNilai) {
+        dtProfilNilai.clear().rows.add(riwayat).draw();
+        return;
+    }
+    
+    dtProfilNilai = $('#tabelProfilNilai').DataTable({
+        data: riwayat,
+        order: [[0, 'desc']],
+        columns: [
+            { data: 'tanggal_latihan' },
+            { data: 'materi_latihan' },
+            { data: 'status' },
+            { data: 'nilai' }
+        ],
+        searching: false,
+        lengthChange: false,
+        pageLength: 5
+    });
+}
+
+const originalNavigateTo = navigateTo;
+navigateTo = function(targetId) {
+    originalNavigateTo(targetId);
+    if (targetId === 'manajemen-atlet') {
+        renderTabelManajemenAtlet();
+    } else if (targetId === 'manajemen-nilai') {
+        renderTabelManajemenNilai();
+    } else if (targetId === 'profil') {
+        const userStr = sessionStorage.getItem('loggedInUser');
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            if (user.role !== 'pelatih' && document.getElementById('profilNilaiWrapper')) {
+                document.getElementById('profilNilaiWrapper').style.display = 'none';
+            }
+        }
+    }
+};
