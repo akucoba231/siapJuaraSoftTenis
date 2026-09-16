@@ -390,6 +390,22 @@
         .sembunyikan {
             display: none;
         }
+
+        .header-profil {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3%;
+        }
+
+        .header-profil h2 {
+            margin:  0;
+            white-space: normal;
+        }
+
+        .header-profil button {
+            padding:  0.8% 3.2%;
+        }
     </style>
 </head>
 <body>
@@ -435,7 +451,7 @@
                 <div class="dropdown" onclick="toggleDropdown(this)">
                     <a style="cursor: pointer;">Admin &#9662;</a>
                     <div class="dropdown-content">
-                        <a data-target="manajemen-atlet">Manajemen Atlet</a>
+                        <a id="untukKembali" data-target="manajemen-atlet">Manajemen Atlet</a>
                         <a data-target="manajemen-nilai">Manajemen Nilai</a>
                     </div>
                 </div>
@@ -734,7 +750,12 @@
 
         <!-- PROFIL KTP SECTION -->
         <div id="profil" class="section">
-            <h2 class="section-title">Profil Akun</h2>
+            <div class="header-profil">
+            <button id="kembaliKeAtlet" style="display:none;">&#8592; Kembali</button>
+            <h2 class="section-title" id="profilTag">
+                Profil Akun
+            </h2>
+            </div>
             <div id="profilContainer">
                 <!-- Akan dirender oleh JS -->
             </div>
@@ -1155,7 +1176,7 @@
     <script type="text/javascript" src="dataMateri.js"></script>
     <script type="text/javascript" src="dataAkun.js"></script>
     <script type="text/javascript" src="dataLatihan.js"></script>
-    <script type="text/javascript" src="ekstraksi_jadwal-2.js"></script>
+    <script type="text/javascript" src="ekstraksi_jadwal-3.js"></script>
     <script>
         // --- GLOBAL LOADER ---
         function showLoading() {
@@ -1288,7 +1309,7 @@
                 
                 let firstName = "";
                 if (user.role === 'pelatih') {
-                    console.log("Pelatih Login");
+                    //console.log("Pelatih Login");
                     navAtlet.forEach(el => el.style.display = 'none');
                     navPelatih.forEach(el => el.style.display = 'inline-block');
                     firstName = user.nama_pelatih ? user.nama_pelatih.split(' ')[0] : 'Admin';
@@ -1338,6 +1359,7 @@
                     document.getElementById('profilButton').style.display = "none";
                 }
                 else {
+                    kembaliOn();
                     renderProfil();
                     document.getElementById('profilButton').style.display = "inline-block";
                 }
@@ -1374,7 +1396,7 @@
                 user = dataAtlet.find(a => a.id_atlet === id_atlet);
                 if (!user) return;
                 currentViewedAtletId = user.id_atlet;
-                console.log("Pelatih Login??")
+                //console.log("Pelatih Login??")
             }
 
             const container = document.getElementById('profilContainer');
@@ -1449,7 +1471,7 @@
             if (targetId && user.role === 'pelatih') {
                 user = dataAtlet.find(a => a.id_atlet === targetId) || user;
             }
-            document.getElementById('editForm').dataset.targetId = user.id_atlet || user.id_pelatih;
+            document.getElementById('editProfileForm').dataset.targetId = user.id_atlet || user.id_pelatih;
 
             document.getElementById('editNama').value = user.nama_atlet || user.nama_pelatih || '';
             document.getElementById('editEmail').value = user.email || '';
@@ -1489,10 +1511,17 @@
 
         async function saveProfile(event) {
             event.preventDefault();
-            
-            const userStr = sessionStorage.getItem('loggedInUser');
-            if(!userStr) return;
-            let user = JSON.parse(userStr);
+            let user = {};
+
+            if(pelatih === false){
+                const userStr = sessionStorage.getItem('loggedInUser');
+                if(!userStr) return;
+                user = JSON.parse(userStr);
+            }
+            else {
+                console.log('pelatih true')
+                user.id_atlet = siswaIni;
+            }
 
             const formData = new FormData();
             
@@ -1543,12 +1572,15 @@
                     }
                     
                     await fetchAllData();
+                    hideEditModal();
+                    
+                    if(pelatih === false){
                     const updatedUser = dataAtlet.find(a => a.id_atlet === user.id_atlet) || user;
                     sessionStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
-                    
-                    hideEditModal();
                     renderProfil();
                     checkAuth(); 
+                    }
+
                 } else {
                     const errData = await res.json().catch(() => ({}));
                     const errorMsg = errData.error || "Gagal memperbarui profil.";
