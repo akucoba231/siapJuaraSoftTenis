@@ -575,8 +575,26 @@ function renderTabelManajemenAtlet() {
     });
 }
 
+function kembaliOn(){
+    let kembali = document.getElementById('kembaliKeAtlet');
+    if(pelatih === true){
+        kembali.style.display = "inline-block";
+        kembali.onclick = () => {
+            document.getElementById('untukKembali').click();
+        }
+    }
+    else {
+        kembali.style.display = "none";
+        kembali.onclick = "";
+    }
+}
+
+let siswaIni = "";
 function lihatProfilAtlet(id_atlet) {
+    siswaIni = id_atlet;
     if (typeof renderProfil === 'function') {
+        document.getElementById('profilTag').textContent = "Profil Akun Atlet";
+        kembaliOn();
         renderProfil(id_atlet);
         renderProfilNilai(id_atlet);
         document.getElementById('profilNilaiWrapper').style.display = 'block';
@@ -637,7 +655,7 @@ function renderTabelManajemenNilai() {
 }
 
 function renderProfilNilai(id_atlet) {
-    const riwayat = dataLatihan.filter(d => d.id_atlet === id_atlet && d.status !== 'diajukan');
+    const riwayat = dataLatihan.filter(d => d.id_atlet === id_atlet);  //&& d.status !== 'diajukan');
     
     if (dtProfilNilai) {
         dtProfilNilai.clear().rows.add(riwayat).draw();
