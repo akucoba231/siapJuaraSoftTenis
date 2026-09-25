@@ -433,7 +433,7 @@
         </button>
         <ul class="nav-links" id="nav-links">
             <li><a data-target="beranda" class="active">Beranda</a></li>
-            <li><a data-target="materi">Materi</a></li>
+            <li><a id="materi-menu" data-target="materi">Materi</a></li>
             <li><a data-target="jadwal">Jadwal</a></li>
             <li><a data-target="dokumentasi" class="sembunyikan">Dokumentasi</a></li>
             
@@ -528,7 +528,7 @@
         <!-- MATERI LEVEL 2 (Daftar Latihan per Bab) -->
         <div id="materi-list" class="section">
             <div class="breadcrumb">
-                <button class="btn-back" onclick="goBackSPA()">&#8592; Kembali</button>
+                <button class="btn-back" onclick="goBackSPAMateri()">&#8592; Kembali</button>
                 <span class="breadcrumb-text" id="breadcrumb-bab">Judul Bab</span>
             </div>
             
@@ -1261,6 +1261,10 @@
 
         function goBackSPA() {
             window.history.back();
+        }
+
+        function goBackSPAMateri(){
+            document.getElementById('materi-menu').click();
         }
 
         // Initialize history state on first load
