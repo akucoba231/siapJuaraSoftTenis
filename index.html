@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+    
     
     
     <style>
@@ -520,6 +522,15 @@
         <!-- MATERI LEVEL 1 (Daftar Bab) -->
         <div id="materi" class="section">
             <h2 class="section-title">Materi Pembinaan</h2>
+            
+            <!-- SEARCH BAR MATERI -->
+            <div class="search-container" style="position: relative; max-width: 800px; margin: 0 auto 2rem auto;">
+                <input type="text" id="searchMateriInput" placeholder="Cari bab atau materi spesifik (contoh: Forehand)..." autocomplete="off" style="width: 100%; padding: 1rem 1.5rem; border-radius: 50px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); outline: none; transition: border-color 0.2s;">
+                <div id="searchDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-top: 0.5rem; z-index: 1000; max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; text-align: left;">
+                    <!-- Hasil pencarian akan dirender di sini -->
+                </div>
+            </div>
+
             <div class="materi-list-container" id="babContainer">
                 <!-- Diisi oleh JS -->
             </div>
@@ -1841,6 +1852,122 @@
         renderCalendar(currentMonth, currentYear);
 
         // --- LOGIKA MATERI SPA ---
+        
+        function initSearchLogic() {
+            if (typeof Fuse === 'undefined' || typeof dataBab === 'undefined' || typeof dataMateri === 'undefined') return;
+            
+            let searchIndex = [];
+            
+            dataBab.forEach(bab => {
+                searchIndex.push({
+                    type: 'bab',
+                    id: bab.id_bab,
+                    judul: bab.judul_bab,
+                    tingkat: '',
+                    tujuan: '',
+                    parentTitle: '',
+                    obj: bab
+                });
+            });
+            
+            dataMateri.forEach(mat => {
+                const parentBab = dataBab.find(b => b.id_bab === mat.bab);
+                searchIndex.push({
+                    type: 'materi',
+                    id: mat.id_materi || mat.id,
+                    id_bab: mat.bab,
+                    judul: mat.judul,
+                    tingkat: mat.latihan && mat.latihan.level ? mat.latihan.level : '',
+                    tujuan: mat.latihan && mat.latihan.tujuan ? mat.latihan.tujuan : '',
+                    parentTitle: parentBab ? parentBab.judul_bab : '',
+                    obj: mat
+                });
+            });
+            
+            const options = {
+                keys: ['judul', 'tingkat', 'tujuan'],
+                threshold: 0.3,
+                includeScore: true
+            };
+            
+            const fuse = new Fuse(searchIndex, options);
+            const searchInput = document.getElementById('searchMateriInput');
+            const searchDropdown = document.getElementById('searchDropdown');
+            
+            if(!searchInput) return;
+
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value;
+                if(query.trim() === '') {
+                    searchDropdown.style.display = 'none';
+                    return;
+                }
+                
+                const results = fuse.search(query);
+                if(results.length > 0) {
+                    renderSearchDropdown(results.slice(0, 10));
+                } else {
+                    searchDropdown.style.display = 'block';
+                    searchDropdown.innerHTML = '<div style="padding: 1.2rem; color: #6b7280; text-align: center;">Tidak ada hasil ditemukan.</div>';
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if(!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.style.display = 'none';
+                }
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if(searchInput.value.trim() !== '') {
+                    searchDropdown.style.display = 'block';
+                }
+            });
+        }
+        
+        function renderSearchDropdown(results) {
+            const dropdown = document.getElementById('searchDropdown');
+            dropdown.innerHTML = '';
+            dropdown.style.display = 'block';
+            
+            results.forEach(res => {
+                const item = res.item;
+                const div = document.createElement('div');
+                div.style.padding = '1rem 1.5rem';
+                div.style.borderBottom = '1px solid #f1f5f9';
+                div.style.cursor = 'pointer';
+                div.style.transition = 'background 0.2s';
+                
+                div.onmouseover = () => div.style.background = '#f8fafc';
+                div.onmouseout = () => div.style.background = 'white';
+                
+                if (item.type === 'bab') {
+                    div.innerHTML = `
+                        <div style="font-weight: 600; color: #1f2937;">📁 ${item.judul}</div>
+                        <div style="font-size: 0.8rem; color: #6b7280; margin-top: 0.2rem;">Kategori Bab</div>
+                    `;
+                    div.onclick = () => {
+                        document.getElementById('searchMateriInput').value = '';
+                        dropdown.style.display = 'none';
+                        openBab(item.id, item.judul);
+                    };
+                } else {
+                    div.innerHTML = `
+                        <div style="font-weight: 600; color: #1f2937;">📄 ${item.judul}</div>
+                        <div style="font-size: 0.8rem; color: #6b7280; margin-top: 0.2rem;">Bagian dari: ${item.parentTitle} &bull; ${item.tingkat}</div>
+                    `;
+                    div.onclick = () => {
+                        document.getElementById('searchMateriInput').value = '';
+                        dropdown.style.display = 'none';
+                        currentBabId = item.id_bab;
+                        document.getElementById('breadcrumb-bab').innerText = item.parentTitle;
+                        openMateriDetail(item.id, item.obj);
+                    };
+                }
+                
+                dropdown.appendChild(div);
+            });
+        }
         function initMateri() {
             const babContainer = document.getElementById('babContainer');
             if (typeof dataBab !== 'undefined' && dataBab) {
@@ -1858,6 +1985,7 @@
                     babContainer.appendChild(card);
                 });
             }
+            initSearchLogic();
         }
 
         function openBab(id_bab, judul_bab) {
