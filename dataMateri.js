@@ -1,3 +1,115 @@
+let bab_0 = [
+  {
+    "bab": "bab0",
+    "id": "bab0-1",
+    "judul": "Pegangan Eastern (Eastern Grip)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Pegang raket menggunakan metode Eastern Grip untuk mempermudah lecutan pergelangan tangan (wrist snap).",
+        "Gunakan tangan kiri untuk memutar raket sekitar 15 derajat sebelum menggenggam gagang raket.",
+        "Hindari penggunaan Western Grip pada servis karena dapat menekuk pergelangan tangan dan menghambat fleksibilitas lecutan raket."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/L2JPGbtqWFg?si=SUVwYUdx9Hd-Qklo",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      48,
+      97
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-2",
+    "judul": "Posisi Berdiri Servis (Serve Position)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Putar badan menghadap ke arah kanan lapangan.",
+        "Buka kedua kaki dengan sikap berdiri (stance) selebar bahu.",
+        "Posisikan kaki kiri lebih maju daripada kaki kanan.",
+        "Pastikan ujung jari kaki kiri mengarah lurus ke tiang di depan net.",
+        "Jaga posisi kaki agar tidak menginjak atau melewati garis belakang (baseline) setelah toss untuk menghindari pelanggaran (foot fault)."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/L2JPGbtqWFg?si=SUVwYUdx9Hd-Qklo",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      97,
+      137
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-3",
+    "judul": "Tahapan Gerak Servis (Serve-division)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Untuk pemula, disarankan mengawali gerakan langsung dari posisi tarikan raket ke belakang (take back) tanpa menurunkan kepala raket terlebih dahulu.",
+        "Lambungkan bola secara vertikal ke arah jam 12 di depan paha kiri sambil menekan tumit kiri ke tanah.",
+        "Putar bahu dan panggul secara bersamaan saat mengayun menuju titik impak bola.",
+        "Lakukan ayunan impak seolah-olah sedang menggambar lingkaran dari belakang punggung.",
+        "Lakukan ayunan lanjutan (follow-through) dengan mengarahkan ujung bingkai raket ke tanah menuju arah jam 7 di samping lutut kiri.",
+        "Tekuk sedikit kedua lutut lalu luruskan seperti pegas untuk mendorong tenaga pukulan.",
+        "Segera kembali ke posisi siap (ready position) setelah ayunan selesai."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/L2JPGbtqWFg?si=SUVwYUdx9Hd-Qklo",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      137,
+      242
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-4",
+    "judul": "Dua Cara Latihan (Two Ways to Practice)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Metode 1 (Latihan Toss): Kunci pergelangan tangan, luruskan lengan kiri saat melambungkan bola, lepaskan bola setinggi mata, dan pastikan bola naik vertikal tanpa putaran melebihi rentangan lengan ke atas.",
+        "Metode 2 (Latihan Ayunan Impak): Simulasikan lemparan seperti bola bisbol dengan tangan kanan; dari posisi take back, lempar bola membentuk parabola ke arah target untuk melatih kelancaran follow-through.",
+        "Latih koordinasi dengan melambungkan bola imajiner menggunakan tangan kiri lalu ayunkan raket dengan memutar bahu dan tubuh bagian atas.",
+        "Lakukan kontak impak bola dengan lengan terentang lurus penuh ke atas.",
+        "Gunakan lecutan pergelangan tangan (wrist snap) setelah kontak seolah menekan bola ke bawah.",
+        "Utamakan akurasi penempatan bola servis daripada sekadar kekuatan pukulan."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/L2JPGbtqWFg?si=SUVwYUdx9Hd-Qklo",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      243,
+      405
+    ]
+  }
+];
+
 let bab_4 = [
   {
     "bab": "bab4",
@@ -2555,8 +2667,12 @@ let bab_11 = [
   }
 ]
 
-let dataMateri = [...bab_4,...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
+let dataMateri = [...bab_0, ...bab_4,...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
 let dataBab = [
+	{
+		"id_bab" : "bab0",
+		"judul_bab" : "Teknik Dasar"
+	},
 	{
 		"id_bab" : "bab4",
 		"judul_bab" : "Pukulan Dasar"
