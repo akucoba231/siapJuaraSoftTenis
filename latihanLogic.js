@@ -131,6 +131,24 @@ function renderRiwayatAtlet(id_atlet) {
 
 // ---------------- ALUR PELATIH ----------------
 
+function updateBadgeNotifEvaluasi() {
+    const badge = document.getElementById('badgeNotifEvaluasi');
+    if (!badge) return;
+    
+    // Hitung jumlah pengajuan yang belum dinilai (status = 'diajukan')
+    const pendingData = dataLatihan.filter(d => d.status === 'diajukan');
+    const count = pendingData.length;
+    
+    if (count > 0) {
+        badge.innerText = count > 9 ? '9+' : count;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+        badge.innerText = '';
+    }
+}
+
+
 function renderDaftarPersetujuan(nama_pelatih) {
     const container = document.getElementById('listPersetujuanLatihan');
     const pendingData = dataLatihan.filter(d => d.status === 'diajukan');
@@ -208,6 +226,9 @@ async function submitEvaluasiPelatih(e) {
             document.getElementById('pelatihLatihanForm').reset();
             showNotification("Penilaian berhasil disimpan!", "success");
             renderDaftarPersetujuan(user.nama_pelatih);
+            if (typeof updateBadgeNotifEvaluasi === 'function') {
+                updateBadgeNotifEvaluasi();
+            }
         } else {
             showNotification("Gagal menyimpan penilaian.", "error");
         }
@@ -415,6 +436,124 @@ function renderGrafikRiwayat() {
     }
 }
 
+// ---------------- GRAFIK PROFIL PELATIH ----------------
+function renderProfilGrafik(id_atlet) {
+    if (!id_atlet) return;
+    
+    // Ambil data spesifik atlet ini (hanya yang sudah dinilai)
+    const chartData = dataLatihan
+        .filter(d => d.id_atlet === id_atlet && d.nilai && !isNaN(d.nilai))
+        .sort((a, b) => new Date(a.tanggal_latihan) - new Date(b.tanggal_latihan));
+    
+    // 1. Populate Dropdown Filter for Line Chart
+    const uniqueMateri = [...new Set(chartData.map(d => d.materi_latihan))];
+    const selectMateri = $('#filterChartMateriPelatih');
+    const currentSelected = selectMateri.val();
+    selectMateri.empty();
+    
+    if(uniqueMateri.length > 0) {
+        uniqueMateri.forEach(m => {
+            selectMateri.append(`<option value="${m}">${m}</option>`);
+        });
+        if (currentSelected && uniqueMateri.includes(currentSelected)) {
+            selectMateri.val(currentSelected);
+        }
+    } else {
+        selectMateri.append('<option value="">Belum ada data nilai</option>');
+    }
+
+    const selectedMateri = selectMateri.val();
+
+    // 2. Render Line Chart (Filtered by Dropdown)
+    const lineDataFiltered = chartData.filter(d => d.materi_latihan === selectedMateri);
+    const lineLabels = lineDataFiltered.map(d => d.tanggal_latihan);
+    const lineNilai = lineDataFiltered.map(d => parseInt(d.nilai));
+
+    if (window.myPerkembanganChartPelatih) {
+        window.myPerkembanganChartPelatih.destroy();
+    }
+
+    const ctxLine = document.getElementById('perkembanganChartPelatih');
+    if (ctxLine && selectedMateri) {
+        window.myPerkembanganChartPelatih = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: lineLabels,
+                datasets: [{
+                    label: `Perkembangan: ${selectedMateri}`,
+                    data: lineNilai,
+                    borderColor: '#065f46',
+                    backgroundColor: 'rgba(6, 95, 70, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#f59e0b',
+                    pointRadius: 5,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top', align: 'start' }
+                }
+            }
+        });
+    }
+
+    // 3. Render Radar Chart (Latest score for each unique materi)
+    const latestScores = {};
+    chartData.forEach(d => {
+        latestScores[d.materi_latihan] = parseInt(d.nilai);
+    });
+
+    const radarLabels = Object.keys(latestScores);
+    const radarData = Object.values(latestScores);
+
+    if (window.myRadarChartPelatih) {
+        window.myRadarChartPelatih.destroy();
+    }
+
+    const ctxRadar = document.getElementById('profilAtletChartPelatih');
+    if (ctxRadar && radarLabels.length > 0) {
+        window.myRadarChartPelatih = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [{
+                    label: 'Profil Kekuatan Terkini',
+                    data: radarData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    }
+}
+
 // ---------------- ALUR EDIT DAN HAPUS LATIHAN ----------------
 function editLatihan(id) {
     const record = dataLatihan.find(d => d.id_latihan === id);
@@ -509,36 +648,6 @@ function showFullCatatan(encodedText) {
     showNotification(text.replace(/\n/g, '<br>'), 'success');
 }
 
-function switchChartTab(tab) {
-    const tabLine = document.getElementById('tabLine');
-    const tabRadar = document.getElementById('tabRadar');
-    const lineContainer = document.getElementById('lineChartContainer');
-    const radarContainer = document.getElementById('radarChartContainer');
-
-    if (tab === 'line') {
-        tabLine.style.background = 'var(--primary)';
-        tabLine.style.color = 'white';
-        tabLine.style.borderBottom = 'none';
-        
-        tabRadar.style.background = 'var(--bg)';
-        tabRadar.style.color = 'var(--text-dark)';
-        tabRadar.style.borderBottom = '1px solid var(--border)';
-        
-        lineContainer.style.display = 'block';
-        radarContainer.style.display = 'none';
-    } else {
-        tabRadar.style.background = 'var(--primary)';
-        tabRadar.style.color = 'white';
-        tabRadar.style.borderBottom = 'none';
-        
-        tabLine.style.background = 'var(--bg)';
-        tabLine.style.color = 'var(--text-dark)';
-        tabLine.style.borderBottom = '1px solid var(--border)';
-        
-        lineContainer.style.display = 'none';
-        radarContainer.style.display = 'block';
-    }
-}
 
 
 
@@ -567,8 +676,8 @@ function renderTabelManajemenAtlet() {
             { 
                 data: null,
                 render: function (data, type, row) {
-                    return `<button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="lihatProfilAtlet('${row.id_atlet}')">Profil</button>
-                            <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #dc2626;" onclick="hapusAtlet('${row.id_atlet}')">Hapus</button>`;
+                    return `<button class="btn" style="padding: 0.5rem 1.5rem; font-size: 0.8rem; margin: 0.5vmin;" onclick="lihatProfilAtlet('${row.id_atlet}')">Profil</button>
+                            <button class="btn" style="padding: 0.5rem 1.5rem; font-size: 0.8rem; margin: 0.5vmin; background: #dc2626;" onclick="hapusAtlet('${row.id_atlet}')">Hapus</button>`;
                 }
             }
         ]
@@ -597,7 +706,16 @@ function lihatProfilAtlet(id_atlet) {
         kembaliOn();
         renderProfil(id_atlet);
         renderProfilNilai(id_atlet);
-        document.getElementById('profilNilaiWrapper').style.display = 'block';
+        if (typeof renderProfilGrafik === 'function') {
+            renderProfilGrafik(id_atlet);
+        }
+        
+        const wrapperNilai = document.getElementById('profilNilaiWrapper');
+        if (wrapperNilai) wrapperNilai.style.display = 'block';
+        
+        const wrapperGrafik = document.getElementById('profilGrafikWrapper');
+        if (wrapperGrafik) wrapperGrafik.style.display = 'block';
+        
         navigateTo('profil');
     }
 }
@@ -626,9 +744,19 @@ function renderTabelManajemenNilai() {
         dtNilai.clear().rows.add(dataLatihan).draw();
         return;
     }
+
+    // console.log(typeof dataLatihan);
+    // console.log(dataLatihan.length);
+
+    let tmpDataLatihan = dataLatihan.filter(item => item.status === "diajukan");
+
+    // console.log(typeof tmpDataLatihan);
+    // console.log(tmpDataLatihan.length);
+    
+
     
     dtNilai = $('#tabelNilai').DataTable({
-        data: dataLatihan,
+        data: tmpDataLatihan, //dataLatihan,
         order: [[0, 'desc']],
         columns: [
             { data: 'tanggal_latihan' },
