@@ -1,3 +1,56 @@
+let persiapan = [
+  {
+    "bab": "persiapan", 
+    "id": "pemanasan-1",
+    "judul": "Pemanasan (Warming Up) Dasar",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Mempersiapkan kondisi fisik dan mencegah cedera sebelum bermain tenis",
+      "keterangan": [
+        "Pemanasan (warming up) sangat diwajibkan bagi pemula sebelum memegang raket dan bermain di lapangan untuk mencegah otot tertarik atau cedera.",
+        "Fase 1 (5 Menit Pertama): Lakukan jogging ringan mengelilingi lapangan agar suhu tubuh meningkat dan otot lebih siap.",
+        "Fase 2 (5 Menit Kedua): Lakukan lari menyamping (running side-step) serta lari maju-mundur. Ini bertujuan untuk melenturkan (fleksibilitas) pergerakan kaki dan tubuh.",
+        "Fase 3 (Peregangan / Stretching): Lakukan peregangan otot secara menyeluruh agar badan terasa enak, ringan, dan nyaman saat melakukan pukulan."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://www.youtube.com/watch?v=Q7iuete-5ec",
+      "@yayukbasukiofficial"
+    ]
+  },
+  {
+    "bab": "persiapan", 
+    "id": "pendinginan-1",
+    "judul": "Pendinginan (Cooling Down)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Memulihkan denyut jantung, merelaksasi otot, dan mencegah pegal setelah bermain tenis",
+      "keterangan": [
+        "Lari pelan mengelilingi lapangan.",
+        "Silangkan kaki dan lakukan gerakan membungkuk menyentuh lantai.",
+        "Selanjutnya menekuk kaki ke belakang secara bergantian.",
+        "Lalu lakukan peregangan lengan dan tangan.",
+        "Dilanjutkan dengan gerakan peregangan tubuh bagian atas.",
+        "Lanjutkan dengan gerakan stretching hamstring."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://www.youtube.com/watch?v=dZChtu63pKA",
+      "@SikanaEnglish"
+    ]
+  }
+]
+
 let bab_0 = [
   {
     "bab": "bab0",
@@ -2805,8 +2858,12 @@ let bab_11 = [
   }
 ]
 
-let dataMateri = [...bab_0, ...bab_4,...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
-let dataBab = [
+let dataMateri = [...persiapan,...bab_0, ...bab_4,...bab_5, ...bab_6, ...bab_7, ...bab_8, ...bab_9, ...bab_10, ...bab_11];
+let dataBab = [ 
+  {
+    "id_bab" : "persiapan",
+    "judul_bab" : "Pemanasan dan Pendinginan"
+  },
 	{
 		"id_bab" : "bab0",
 		"judul_bab" : "Teknik Dasar"
