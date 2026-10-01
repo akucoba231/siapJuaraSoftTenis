@@ -107,6 +107,144 @@ let bab_0 = [
       243,
       405
     ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-5",
+    "judul": "Perbedaan Soft Tenis dan Tenis",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Raket Soft Tenis: Panjang kepala ≤ 32 cm, lebar kepala < 23 cm. Panjang keseluruhan 68–69 cm, lebar keseluruhan 24 cm. Berat sangat ringan (sekitar 260 gram).",
+        "Raket Tenis (Konvensional): Panjang kepala ≤ 39.4 cm, lebar kepala < 29.2 cm. Panjang keseluruhan maksimal 73.7 cm, lebar keseluruhan maksimal 31.7 cm. Berat lebih masif (265–350 gram).",
+        "Bola Soft Tenis: Diameter 6.6 cm. Sangat ringan (sekitar 30–31 gram) dan lunak.",
+        "Bola Tenis: Diameter 6.54–6.86 cm. Jauh lebih berat (sekitar 56.0–59.4 gram)."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/_Z4zgJ4D-g8",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      17,
+      70
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-6",
+    "judul": "Pukulan Forehand (Forehand Stroke)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Penggunaan Western grip yang rileks dengan telunjuk agak ke atas.",
+        "Lakukan sikap bersiap dengan kaki dibuka lebih lebar dari bahu, tangan kiri memegang bagian tengah raket, lalu posisikan raket di dekat perut, lalu lutut ditekuk, badan condong, dan tumit sedikit terangkat.",
+        "Saat mengayun raket, lakukan take back dengan memutar seluruh tubuh bagian atas ke belakang, posisikan raket sejajar dengan mata, letakkan tangan kiri di depan dada, lalu langkahkan kaki kiri 45 derajat, lalu ayunkan. Saat benturan, tutupi ayunan dengan 15 derajat perputaran pergelangan tangan, titik pukul harus di atas perut searah dengan lutut kiri. Setelah benturan, ikuti gerakan mengayun hingga bingkai raket menyentuh punggung, ubah pusat beban ke kaki kanan, lalu kembali ke sikap bersiap.",
+        "Saat hendak melakukan sikap bersiap, pada saat bola hendak melewati net, lakukan langkah kecil (small step), lalu diikuti dengan langkah terpisah (split step) ini untuk mempercepat langkah untuk mengikuti bola.",
+        "Lakukan latihan mandiri dengan metode melempar bola dan pukul dengan raket."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/_Z4zgJ4D-g8",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      147,
+      408
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-7",
+    "judul": "Pukulan Backhand (Backhand Stroke)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "pemula"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Lakukan sikap bersiap dengan kaki dibuka lebih lebar dari bahu, tangan kiri memegang bagian tengah raket, lalu posisikan raket di dekat perut, lalu lutut ditekuk, badan condong, dan tumit sedikit terangkat.",
+        "Saat hendak melakukan sikap bersiap, pada saat bola hendak melewati net, lakukan langkah kecil (small step), lalu diikuti dengan langkah terpisah (split step) ini untuk mempercepat langkah untuk mengikuti bola.",
+        "Saat mengayun raket, lakukan take back dengan memutar seluruh tubuh bagian atas ke kiri, letakkan tangan kiri di depan dada, lalu ayunkan lengan beserta otot pinggang/perut untuk memaksimalkan pukulan.",
+        "Tumpuan berat badan berada di belakang (kaki kiri)."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/_Z4zgJ4D-g8",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      408,
+      575
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-8",
+    "judul": "Pukulan Voli (Volley)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "menengah"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Voli adalah keterampilan utama bagi pemain depan (forward player) yang mencakup voli serang, voli forehand, dan voli backhand.",
+        "Posisi kaki dan raket saat bersiap sama dengan pukulan dasar, cukup naikkan kepala raket.",
+        "Langkah kaki (Volley step): Ambil langkah pendek dengan kaki kiri (sebagai pijakan/dorongan), lalu ambil langkah panjang ke depan dengan kaki kanan. Setelah memukul, akhiri dengan kaki kiri, mundur, dan kembali bersiap.",
+        "Ayunan: Melangkah terlebih dahulu, luruskan lengan, dan pukul bola secepatnya sebelum bola melewati net (memotong laju bola).",
+        "Voli Forehand: Putar kaki ke sisi kanan, tetapi jangan memutar tubuh bagian atas sepenuhnya (jangan sampai punggung terlihat oleh lawan).",
+        "Voli Backhand: Putar kaki ke sisi kiri, perlihatkan punggung Anda kepada lawan, dan rentangkan lengan lebih panjang untuk menjangkau bola."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/_Z4zgJ4D-g8",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      578,
+      691
+    ]
+  },
+  {
+    "bab": "bab0",
+    "id": "bab0-9",
+    "judul": "Pukulan Smes (Smashing)",
+    "latihan": {
+      "pemain": "1",
+      "standar": "1",
+      "level": "menengah"
+    },
+    "praktik": {
+      "tujuan": "Melakukan teknik soft tenis yang tepat dan akurat",
+      "keterangan": [
+        "Smes adalah keterampilan menyerang untuk pemain depan (forward player).",
+        "Putar tubuh atas menjadi menyamping, tarik raket ke atas bahu, dan melangkahlah mundur seperti gerakan berlari mundur.",
+        "Ubah pegangan raket dari Western ke Eastern (agak ke bawah) menggunakan bantuan tangan kiri bersamaan dengan gerakan tarikan (take back).",
+        "Pastikan pergelangan tangan rileks dan fleksibel sebelum memukul untuk menciptakan efek daya pegas.",
+        "Manfaatkan tenaga dari putaran bahu dan pinggang secara bersamaan, bukan hanya kekuatan lengan.",
+        "Hindari melangkah mundur dengan posisi tubuh menghadap lurus ke depan atau berjalan menyamping biasa.",
+        "Jaga siku agar tidak bergerak maju lebih dulu mendahului raket; luruskan siku tepat saat mengenai bola.",
+        "Saat melakukan pukulan, jangan hanya menggunakan pergelangan tangan, pastikan ayunan dibantu oleh otot pinggang dan lengan.",
+        "Akhiri ayunan lanjutan (follow swing) secara diagonal atau menyilang ke arah bawah, jangan lurus ke depan atau ke tengah badan."
+      ]
+    },
+    "foto": "",
+    "video": [
+      "https://youtu.be/_Z4zgJ4D-g8",
+      "대한정구협회 - @KoreaSoftTennisAssociaiton",
+      692,
+      1000
+    ]
   }
 ];
 
