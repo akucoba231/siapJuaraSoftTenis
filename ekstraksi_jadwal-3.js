@@ -534,9 +534,9 @@ const dataJadwal = [
         "sesi": "16.00 - 18.00 (2 Jam)",
         "pemanasan": "Pemanasan, Kalibrasi Pantulan, Mini Soft Tennis.",
         "latihan": "Endurance, Agility Footwork Cepat.",
-        "utama": "Latihan Variasi Pukulan Dasar, Forehand, Backhand, Slice, Volley, Drive Volley, Half Volley dan Service, Drill Penempatan Bola.",
+        "utama": "TC (Trainning Competition)",
         "simulasi": "Bermain Full Set Taktik Intensif, Game.",
         "evaluasi": "Penguatan Fisik, Pendinginan.",
         "tempat": "Lapangan Tenis Wibawa Mukti"
-    }
+    },
 ];
