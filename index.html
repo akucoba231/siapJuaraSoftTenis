@@ -30,6 +30,11 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; color: var(--secondary); }
         
@@ -46,8 +51,12 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
-        .logo svg { width: 35px; height: 35px; fill: var(--primary); }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo svg { width: 42px; height: 42px; min-width: 42px; fill: var(--primary); }
+        .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+        .brand-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--secondary); letter-spacing: 0.5px; }
+        .brand-sub1 { font-size: 0.8rem; font-weight: 600; color: var(--primary); }
+        .brand-sub2 { font-size: 0.7rem; color: var(--text-light); font-weight: 400; }
         
         .nav-links { list-style: none; display: flex; gap: 2rem; align-items: center; }
         .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; transition: var(--transition); cursor: pointer; padding: 0.5rem 0; border-bottom: 2px solid transparent; }
@@ -339,19 +348,25 @@
         /* Tablet Portrait & Large Mobile */
         @media (max-width: 768px) {
             .section { width: 100%; }
+            .logo svg { width: 36px; height: 36px; min-width: 36px; }
+            .brand-title { font-size: 1rem; }
+            .brand-sub1 { font-size: 0.72rem; }
+            .brand-sub2 { font-size: 0.65rem; }
+            .hamburger { display: block; flex-shrink: 0; margin-left: 0.75rem; }
             .nav-links {
-                position: fixed; top: 70px; left: -100%; width: 100%; height: auto; padding: 2rem 0;
+                position: absolute; top: 100%; left: -100%; width: 100%; height: auto; padding: 2rem 0;
                 background: var(--bg-card); flex-direction: column; align-items: center; justify-content: center;
-                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); gap: 1.5rem;
-                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); gap: 1.5rem;
+                box-shadow: 0 12px 20px rgba(0,0,0,0.12);
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
+                max-height: 80vh;
+                overflow-y: auto;
             }
             .nav-links.active { left: 0; }
             .dropdown-content { position: static; box-shadow: none; display: none; background: #f8fafc; border-radius: 8px; margin-top: 0.5rem; }
             .dropdown.active .dropdown-content { display: flex; }
             .dropdown > a { justify-content: center; }
-            .hamburger { display: block; }
             .weekday-header { padding: 0.5rem 0.2rem; font-size: 0.75rem; }
             .day-cell { min-height: 80px; padding: 0.4rem; }
             .day-cell .training-badge { font-size: 0.65rem; padding: 0.3rem 0.2rem; margin-top: 0.3rem; }
@@ -364,10 +379,21 @@
             .profile-grid { grid-template-columns: 1fr; }
             .profile-grid .form-group { grid-column: 1 / -1 !important; }
             .checkbox-group { flex-direction: column; gap: 0.5rem; }
+            #countdown-set {
+                display: none;
+            }
+            #countdown-set-2 {
+                display: inline-block;
+            }
         }
 
         /* Small Mobile */
         @media (max-width: 480px) {
+            nav { padding: 0.75rem 4%; }
+            .logo svg { width: 32px; height: 32px; min-width: 32px; }
+            .brand-title { font-size: 0.88rem; }
+            .brand-sub1 { font-size: 0.68rem; }
+            .brand-sub2 { font-size: 0.6rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
             .container { padding: 1.5rem 3%; }
             .card, .materi-detail-content { padding: 1.2rem; margin-bottom: 1.5rem; }
             .calendar-nav { flex-direction: column; gap: 1rem; padding: 1rem; text-align: center; }
@@ -382,6 +408,13 @@
             .btn { padding: 0.7rem 2rem; }
             .breadcrumb { padding: 0.8rem 1rem; }
             .breadcrumb-text { font-size: 0.95rem; }
+            #countdown-set {
+                display: none;
+            }
+
+            #countdown-set-2 {
+                display: inline-block;
+            }
         }
 
 
@@ -413,6 +446,604 @@
         .bg-primary-local {
             background-color: #0d6efd !important;
         }
+
+        /* Widget Sub-Navbar Countdown Porprov */
+        .countdown-subnav {
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%);
+            border-radius: var(--border-radius);
+            padding: 1.25rem 1.5rem;
+            color: white;
+            box-shadow: 0 10px 25px rgba(6, 95, 70, 0.15);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .countdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+        }
+        .countdown-badge {
+            background: rgba(245, 158, 11, 0.25);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .countdown-label-target {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(0.4rem, 2vw, 1.2rem);
+        }
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem 0.85rem;
+            min-width: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .countdown-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: #ffffff;
+        }
+        .countdown-lbl {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        .countdown-separator {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: -12px;
+        }
+        #countdown-set input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        /* ===================================================
+           SB ADMIN 2 INSPIRED DASHBOARD STYLES (ROLE PELATIH)
+           =================================================== */
+        .sb-dashboard-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .sb-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .sb-page-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sb-page-subtitle {
+            font-size: 0.88rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .sb-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .sb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.15rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .sb-btn-primary {
+            background: #4e73df;
+            color: white;
+            box-shadow: 0 4px 6px rgba(78, 115, 223, 0.2);
+        }
+        .sb-btn-primary:hover {
+            background: #2e59d9;
+            transform: translateY(-1px);
+        }
+
+        .sb-btn-outline {
+            background: white;
+            color: #4e73df;
+            border: 1px solid #4e73df;
+        }
+        .sb-btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        /* =========================================================
+           1-COLUMN LIST & RESPONSIVE DASHBOARD STYLES (PELATIH)
+           ========================================================= */
+        .sb-list-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            width: 100%;
+        }
+
+
+        /* 4 KPI Cards - Format 1 Kolom List Menyamping */
+        .sb-kpi-list-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.15rem 1.4rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+        .sb-kpi-list-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+        }
+
+        .sb-kpi-list-item.border-primary { border-left: 6px solid #4e73df; }
+        .sb-kpi-list-item.border-success { border-left: 6px solid #1cc88a; }
+        .sb-kpi-list-item.border-warning { border-left: 6px solid #f6c23e; }
+        .sb-kpi-list-item.border-danger  { border-left: 6px solid #e74a3b; }
+
+        .sb-kpi-left {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sb-kpi-icon-badge {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .sb-kpi-label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.2rem;
+        }
+
+        .sb-kpi-desc {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.35;
+        }
+
+        .sb-kpi-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: 1rem;
+        }
+
+        .sb-kpi-num {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.1;
+        }
+
+        .sb-kpi-unit {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 4 Modul Pintasan Pelatih - Format 1 Kolom List */
+        .sb-module-list-item {
+            background: white;
+            border-radius: 14px;
+            padding: 1.15rem 1.4rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+        .sb-module-list-item:hover {
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(78, 115, 223, 0.1);
+        }
+
+        .sb-module-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sb-module-icon-box {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .sb-module-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sb-module-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.35rem;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .sb-module-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .sb-module-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .sb-module-desc {
+            font-size: 0.88rem;
+            color: #64748b;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        .sb-module-arrow {
+            font-size: 1.6rem;
+            color: #cbd5e1;
+            font-weight: bold;
+            margin-left: 1rem;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .sb-module-list-item:hover .sb-module-arrow {
+            color: #4e73df;
+            transform: translateX(4px);
+        }
+
+        /* 1-Column Panels Stack */
+        .sb-panels-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .sb-panel {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .sb-panel-header {
+            background: #f8fafc;
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .sb-panel-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #334155;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sb-panel-body {
+            padding: 1.25rem;
+            flex: 1;
+        }
+
+        /* Progress bars KPI */
+        .sb-progress-group {
+            margin-bottom: 1rem;
+        }
+        .sb-progress-group:last-child {
+            margin-bottom: 0;
+        }
+        .sb-progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.35rem;
+        }
+        .sb-progress-track {
+            height: 9px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .sb-progress-bar {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        /* Notice List */
+        .sb-notice-item {
+            padding: 0.75rem 0.9rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border-left: 4px solid #4e73df;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+        .sb-notice-item:last-child {
+            margin-bottom: 0;
+        }
+        .sb-notice-item strong {
+            display: block;
+            color: #1e293b;
+            margin-bottom: 0.2rem;
+        }
+        .sb-notice-date {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* Wadah Khusus Scroll Horizontal Tabel & Grafik Mobile */
+        .sb-scrollable-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .sb-scroll-hint {
+            display: none;
+            font-size: 0.76rem;
+            color: #64748b;
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 500;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .sb-table-mini {
+            width: 100%;
+            min-width: 580px;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .sb-table-mini th {
+            text-align: left;
+            padding: 0.65rem 0.75rem;
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        .sb-table-mini td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .sb-table-mini tr:hover td {
+            background: #f8fafc;
+        }
+
+        .sb-chart-scroll-inner {
+            position: relative;
+            height: 340px;
+            min-width: 460px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .table-responsive-card {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+        }
+
+        /* DataTables Global Responsiveness */
+        .dataTables_wrapper {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.5rem;
+        }
+        table.dataTable {
+            width: 100% !important;
+            min-width: 550px;
+        }
+
+        @media (min-width:  768px){
+            #countdown-set-2 {
+                display: none;
+            }
+        }
+
+        /* Breakpoints Responsif Khusus Mobile */
+        @media (max-width: 768px) {
+            .sb-page-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+            }
+            .sb-page-title {
+                font-size: 1.35rem;
+            }
+            .sb-actions {
+                width: 100%;
+                display: flex;
+            }
+            .sb-actions .sb-btn {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+            }
+            .sb-scroll-hint {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sb-kpi-list-item {
+                padding: 0.95rem 1.1rem;
+            }
+            .sb-kpi-left {
+                gap: 0.8rem;
+            }
+            .sb-kpi-icon-badge {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                font-size: 1.3rem;
+            }
+            .sb-kpi-label {
+                font-size: 0.88rem;
+            }
+            .sb-kpi-desc {
+                font-size: 0.75rem;
+            }
+            .sb-kpi-num {
+                font-size: 1.4rem;
+            }
+
+            .sb-module-list-item {
+                padding: 1rem 1.15rem;
+            }
+            .sb-module-left {
+                gap: 0.8rem;
+            }
+            .sb-module-icon-box {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                font-size: 1.3rem;
+            }
+            .sb-module-title {
+                font-size: 0.98rem;
+            }
+            .sb-module-desc {
+                font-size: 0.82rem;
+            }
+
+            .sb-panel-header {
+                padding: 0.75rem 1rem;
+            }
+            .sb-panel-body {
+                padding: 1rem;
+            }
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_info,
+            .dataTables_wrapper .dataTables_paginate {
+                text-align: left !important;
+                float: none !important;
+                margin: 0.4rem 0 !important;
+            }
+        }
+
+        .no-display {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -434,6 +1065,11 @@
                 <!-- Bola -->
                 <circle cx="18" cy="6" r="3" fill="var(--accent)"/>
             </svg>
+            <div class="brand-text">
+                <span class="brand-title">MENUJU PORPROV 2026</span>
+                <span class="brand-sub1">Portal Evaluasi & Manajemen Performa Atlet</span>
+                <span class="brand-sub2">Mengukur progres, meminimalkan cedera, memaksimalkan potensi juara</span>
+            </div>
         </div>
         <button class="hamburger" id="hamburger-btn">
             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
@@ -442,7 +1078,7 @@
             <li><a data-target="beranda" class="active">Beranda</a></li>
             <li><a id="materi-menu" data-target="materi">Materi</a></li>
             <li><a data-target="jadwal">Jadwal</a></li>
-            <li><a data-target="dokumentasi" class="sembunyikan">Dokumentasi</a></li>
+            <li><a data-target="dokumentasi" class="">Dokumentasi</a></li>
             
             <!-- Elemen ini hanya muncul jika SUDAH LOGIN -->
             <li class="nav-auth nav-atlet" style="display: none;">
@@ -455,16 +1091,11 @@
                 </div>
             </li>
             <li class="nav-auth nav-pelatih" style="display: none;">
-                <div class="dropdown" onclick="toggleDropdown(this)">
-                    <a style="cursor: pointer;">Admin &#9662;</a>
-                    <div class="dropdown-content">
-                        <a id="untukKembali" data-target="manajemen-atlet">Manajemen Atlet</a>
-                        <a data-target="manajemen-nilai" style="display: flex; flex-wrap: nowrap; white-space: nowrap; justify-content: center; align-items: center;">
-                             <span>Manajemen Nilai</span>
-                             <span id="badgeNotifEvaluasi" style="display:none; background:red; color:white; border-radius: 25%; padding:4px 8px; font-size:0.8rem; margin-left:5px; vertical-align:middle; line-height:1; font-weight:bold;"></span>
-                         </a>
-                    </div>
-                </div>
+                <a data-target="dashboard-admin" style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <span>Admin</span>
+                    <span id="badgeNotifEvaluasi" style="display:none; background:#ef4444; color:white; border-radius: 12px; padding:2px 7px; font-size:0.75rem; font-weight:bold; line-height:1;"></span>
+                </a>
+                <a id="untukKembali" data-target="manajemen-atlet" style="display:none;"></a>
             </li>
             <li class="nav-auth" style="display: none;">
                 <div class="dropdown" onclick="toggleDropdown(this)">
@@ -487,6 +1118,35 @@
         <!-- BERANDA SECTION -->
         <div id="beranda" class="section active">
             
+            <!-- Widget Sub-Navbar Countdown Porprov 2026 -->
+            <div class="countdown-subnav">
+                <div class="countdown-header">
+                    <span class="countdown-badge">🔥 ROAD TO PORPROV JABAR 2026</span>
+                    <span class="countdown-label-target" id="countdownTargetLabel">Target Pembukaan: 1 November 2026</span>
+                </div>
+                <div class="countdown-timer" id="countdownTimer">
+                    <div class="countdown-box">
+                        <span class="countdown-val" id="cdDays">00</span>
+                        <span class="countdown-lbl">Hari</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-box">
+                        <span class="countdown-val" id="cdHours">00</span>
+                        <span class="countdown-lbl">Jam</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-box">
+                        <span class="countdown-val" id="cdMinutes">00</span>
+                        <span class="countdown-lbl">Menit</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-box">
+                        <span class="countdown-val" id="cdSeconds">00</span>
+                        <span class="countdown-lbl">Detik</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hero / Cover -->
             <div class="hero">
                 <div class="hero-cover">
@@ -501,11 +1161,107 @@
                 </div>
             </div>
 
-            <!-- Jadwal Latihan Preview -->
-            <div class="card" style="text-align: center;">
-                <h2 class="section-title">Jadwal Latihan Terdekat</h2>
-                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Cek seluruh agenda dan program latihan Anda di halaman khusus jadwal.</p>
-                <a onclick="navigateTo('jadwal')" class="btn" style="display: inline-block;">Lihat Jadwal Lengkap</a>
+            <!-- Card Fitur Utama Aplikasi -->
+            <div class="card">
+                <h2 class="section-title" style="margin-bottom: 0.8rem;">Fitur Utama Aplikasi</h2>
+                <p style="color: var(--text-light); text-align: center; max-width: 650px; margin: 0 auto 2.5rem auto;">
+                    Platform digital terpadu pembinaan dan pelatihan Soft Tennis untuk mendukung peningkatan performa dan kesiapan atlet menuju Porprov Jawa Barat 2026.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 850px; margin: 0 auto;">
+                    <!-- Fitur 1 -->
+                    <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem 1.5rem; transition: var(--transition); display: flex; align-items: flex-start; gap: 1.25rem; cursor: pointer;" onclick="navigateTo('materi')">
+                        <div style="width: 50px; height: 50px; min-width: 50px; border-radius: 12px; background: rgba(6, 95, 70, 0.12); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                            🎾
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">Materi Latihan</h3>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary); background: rgba(6, 95, 70, 0.1); padding: 3px 10px; border-radius: 20px;">Fitur 1</span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                                Menyediakan materi latihan soft tenis yang terstruktur mulai dari persiapan fisik, teknik dasar, variasi pukulan, hingga taktik permainan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fitur 2 -->
+                    <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem 1.5rem; transition: var(--transition); display: flex; align-items: flex-start; gap: 1.25rem; cursor: pointer;" onclick="navigateTo('materi')">
+                        <div style="width: 50px; height: 50px; min-width: 50px; border-radius: 12px; background: rgba(2, 132, 199, 0.12); color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                            🎬
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">Video Teknik Dasar</h3>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #0284c7; background: rgba(2, 132, 199, 0.1); padding: 3px 10px; border-radius: 20px;">Fitur 2</span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                                Menampilkan video teknik dasar soft tenis lengkap dengan tayangan intro khusus, analisis visual, dan petunjuk gerakan yang presisi.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fitur 3 -->
+                    <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem 1.5rem; transition: var(--transition); display: flex; align-items: flex-start; gap: 1.25rem; cursor: pointer;" onclick="navigateTo('jadwal')">
+                        <div style="width: 50px; height: 50px; min-width: 50px; border-radius: 12px; background: rgba(245, 158, 11, 0.12); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                            📅
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">Jadwal Latihan Atlet</h3>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #b45309; background: rgba(245, 158, 11, 0.1); padding: 3px 10px; border-radius: 20px;">Fitur 3</span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                                Menyajikan jadwal latihan atlet secara menyeluruh yang terintegrasi dengan kalender interaktif dan tabel periodesasi makrosiklus.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fitur 4 -->
+                    <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem 1.5rem; transition: var(--transition); display: flex; align-items: flex-start; gap: 1.25rem;">
+                        <div style="width: 50px; height: 50px; min-width: 50px; border-radius: 12px; background: rgba(99, 102, 241, 0.12); color: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                            📸
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">Dokumentasi Latihan</h3>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #4f46e5; background: rgba(99, 102, 241, 0.1); padding: 3px 10px; border-radius: 20px;">Fitur 4</span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                                Menyimpan dokumentasi kegiatan latihan sebagai arsip visual dan rekam jejak progres latihan lapangan secara terorganisir.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fitur 5 -->
+                    <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem 1.5rem; transition: var(--transition); display: flex; align-items: flex-start; gap: 1.25rem;">
+                        <div style="width: 50px; height: 50px; min-width: 50px; border-radius: 12px; background: rgba(16, 185, 129, 0.12); color: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
+                            📊
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">Evaluasi Latihan</h3>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #047857; background: rgba(16, 185, 129, 0.1); padding: 3px 10px; border-radius: 20px;">Fitur 5</span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                                Menyediakan evaluasi latihan bagi atlet lengkap dengan penilaian skor (1–5), koreksi teknis dari pelatih, serta grafik perkembangan analitis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jadwal Latihan Terdekat -->
+            <div class="card" id="acara" style="text-align: center;">
+                <h2 class="section-title" style="margin-bottom: 0.8rem;">Jadwal Latihan Terdekat</h2>
+                <p style="color: var(--text-light); max-width: 650px; margin: 0 auto 1.8rem auto;">Agenda dan rincian materi sesi latihan mendatang yang paling dekat dengan jadwal saat ini.</p>
+                
+                <div id="jadwalTerdekatContent">
+                    <p style="color: var(--text-light); padding: 1.5rem;">Memuat jadwal terdekat...</p>
+                </div>
+
+                <div style="margin-top: 0.5rem; border-top: 1px solid #f1f5f9; padding-top: 1.5rem;">
+                    <a onclick="navigateTo('jadwal')" class="btn" style="display: inline-block;">Lihat Jadwal Lengkap & Periodesasi &rarr;</a>
+                </div>
             </div>
 
             <!-- Dokumentasi Carousel -->
@@ -581,17 +1337,6 @@
                 <button class="btn-back" onclick="goBackSPA()">&#8592; Kembali</button>
                 <span class="breadcrumb-text">Jadwal Latihan</span>
             </div>
-            
-            <div class="card" style="margin-bottom: 2rem;">
-                <h2 class="section-title" style="margin-bottom: 1rem;">Periodesasi Soft Tenis (Juni - November 2026)</h2>
-                <div style="overflow-x: auto; margin-bottom: 1rem;">
-                    <table id="periodesasiTable" border="1" cellpadding="3" style="border-collapse: collapse; text-align: center; white-space: nowrap; width: 100%; font-size: 0.85rem; border-color: #ddd; zoom: 0.8;">
-                        <tbody id="periodesasiTableBody">
-                            <!-- Diisi oleh JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
             <div class="card">
                 <h2 class="section-title" style="margin-bottom: 1rem;">Kalender Lengkap</h2>
@@ -606,6 +1351,17 @@
                     <div class="calendar-grid" id="calendarGrid">
                         <!-- Header akan dirender oleh JS, beserta isinya -->
                     </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <h2 class="section-title" style="margin-bottom: 1rem;">Periodesasi Soft Tenis (Juni - November 2026)</h2>
+                <div style="overflow-x: auto; margin-bottom: 1rem;">
+                    <table id="periodesasiTable" border="1" cellpadding="3" style="border-collapse: collapse; text-align: center; white-space: nowrap; width: 100%; font-size: 0.85rem; border-color: #ddd; zoom: 0.8;">
+                        <tbody id="periodesasiTableBody">
+                            <!-- Diisi oleh JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -714,10 +1470,375 @@
             </div>
         </div>
 
+        <!-- DASHBOARD ADMIN SECTION (SB ADMIN 2 INSPIRED - KHUSUS PELATIH) -->
+        <div id="dashboard-admin" class="section">
+            <div class="sb-dashboard-wrapper">
+                
+                <!-- Page Header & Action Bar -->
+                <div class="sb-page-header">
+                    <div>
+                        <h1 class="sb-page-title">
+                            <span>🛠️ Dashboard Manajemen Tim</span>
+                        </h1>
+                        <p class="sb-page-subtitle">
+                            Pusat Kendali Pelatih &bull; <strong id="dashCoachName" style="color: #1e293b;">Coach Dhani Rohyat, S. Pd</strong> &bull; Road to Porprov Jabar 2026
+                        </p>
+                    </div>
+                    <div class="sb-actions no-display">
+                        <button class="sb-btn sb-btn-outline" onclick="openRegisterModal()">
+                            <span>👤 + Tambah Atlet</span>
+                        </button>
+                        <button class="sb-btn sb-btn-primary" onclick="navigateTo('manajemen-nilai')">
+                            <span>📋 Antrean Evaluasi</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bagian 1: 4 Indikator KPI Utama (Format List 1 Kolom Menyamping) -->
+                <div>
+                    <h3 style="font-size: 1.05rem; color: #334155; margin-bottom: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        📊 Ringkasan Metrik Tim
+                    </h3>
+                    <div class="sb-list-col">
+                        <!-- Item 1: Total Atlet Binaan -->
+                        <div class="sb-kpi-list-item border-primary" onclick="navigateTo('manajemen-atlet')">
+                            <div class="sb-kpi-left">
+                                <div class="sb-kpi-icon-badge" style="background: rgba(78, 115, 223, 0.12); color: #4e73df;">
+                                    🎾
+                                </div>
+                                <div>
+                                    <div class="sb-kpi-label">Total Atlet Binaan</div>
+                                    <div class="sb-kpi-desc">👥 Kelompok Usia 15 - 18 Tahun Terdaftar</div>
+                                </div>
+                            </div>
+                            <div class="sb-kpi-right">
+                                <span class="sb-kpi-num" id="dashTotalAtlet">--</span>
+                                <span class="sb-kpi-unit">Atlet</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Sesi Selesai Terevaluasi -->
+                        <div class="sb-kpi-list-item border-success no-display" onclick="navigateTo('jadwal')">
+                            <div class="sb-kpi-left">
+                                <div class="sb-kpi-icon-badge" style="background: rgba(28, 200, 138, 0.12); color: #1cc88a;">
+                                    ✅
+                                </div>
+                                <div>
+                                    <div class="sb-kpi-label">Sesi Selesai Terevaluasi</div>
+                                    <div class="sb-kpi-desc">📈 Catatan Terverifikasi Makrosiklus</div>
+                                </div>
+                            </div>
+                            <div class="sb-kpi-right">
+                                <span class="sb-kpi-num" id="dashTotalSesi">--</span>
+                                <span class="sb-kpi-unit">Sesi</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 3: Evaluasi Perlu Tindakan -->
+                        <div class="sb-kpi-list-item border-warning no-display" onclick="navigateTo('manajemen-nilai')">
+                            <div class="sb-kpi-left">
+                                <div class="sb-kpi-icon-badge" style="background: rgba(246, 194, 62, 0.18); color: #d97706;">
+                                    ⏱️
+                                </div>
+                                <div>
+                                    <div class="sb-kpi-label">Evaluasi Perlu Tindakan</div>
+                                    <div class="sb-kpi-desc">⚠️ Klik untuk menilai catatan latihan atlet</div>
+                                </div>
+                            </div>
+                            <div class="sb-kpi-right">
+                                <span class="sb-kpi-num" id="dashPendingEvaluasi" style="color: #d97706;">--</span>
+                                <span class="sb-kpi-unit" style="color: #d97706;">Pending</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 4: Hitung Mundur Porprov -->
+                        <div class="sb-kpi-list-item border-danger" onclick="gantiTanggal()">
+                            <div class="sb-kpi-left">
+                                <div class="sb-kpi-icon-badge" style="background: rgba(231, 74, 59, 0.12); color: #e74a3b;">
+                                    🔥
+                                </div>
+                                <div>
+                                    <div class="sb-kpi-label">Hitung Mundur Porprov 2026</div>
+                                    <div class="sb-kpi-desc">🏆 Target Medali Emas Jawa Barat (1 Nov 2026)</div>
+                                    <div id="countdown-set-2" class="sb-kpi-desc"><em>Ketuk untuk mengubah tanggal kejuaraan</em></div>
+                                </div>
+                            </div>
+                            <div id="countdown-set"></div>
+                            <div class="sb-kpi-right">
+                                <span class="sb-kpi-num" id="dashCountdown">--</span>
+                                <span class="sb-kpi-unit">Hari</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 2: Modul Operasional Pelatih (Format List 1 Kolom) -->
+                <div>
+                    <h3 style="font-size: 1.05rem; color: #334155; margin-bottom: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        ⚡ Modul Operasional Pelatih
+                    </h3>
+                    <div class="sb-list-col">
+                        <!-- Modul 1: Manajemen Atlet -->
+                        <div class="sb-module-list-item" onclick="navigateTo('manajemen-atlet')">
+                            <div class="sb-module-left">
+                                <div class="sb-module-icon-box" style="background: rgba(78, 115, 223, 0.12); color: #4e73df;">
+                                    👥
+                                </div>
+                                <div class="sb-module-info">
+                                    <div class="sb-module-title-row">
+                                        <h4 class="sb-module-title">Manajemen Atlet</h4>
+                                        <span class="sb-module-badge" style="background: rgba(78, 115, 223, 0.1); color: #4e73df;">Modul 1</span>
+                                    </div>
+                                    <p class="sb-module-desc">
+                                        Kelola basis data atlet, pantau profil KTP, posisi bermain, dan riwayat perkembangan kemampuan tiap atlet.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="sb-module-arrow">&#8250;</div>
+                        </div>
+
+                        <!-- Modul 2: Manajemen Nilai & Evaluasi -->
+                        <div class="sb-module-list-item" onclick="navigateTo('manajemen-nilai')">
+                            <div class="sb-module-left">
+                                <div class="sb-module-icon-box" style="background: rgba(28, 200, 138, 0.12); color: #1cc88a;">
+                                    📝
+                                </div>
+                                <div class="sb-module-info">
+                                    <div class="sb-module-title-row">
+                                        <h4 class="sb-module-title">Manajemen Nilai & Evaluasi</h4>
+                                        <span class="sb-module-badge" style="background: rgba(28, 200, 138, 0.1); color: #047857;">Modul 2</span>
+                                    </div>
+                                    <p class="sb-module-desc">
+                                        Tinjau antrean catatan latihan mandiri yang diajukan atlet, beri skor evaluasi (1-5), koreksi teknis, dan catatan.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="sb-module-arrow">&#8250;</div>
+                        </div>
+
+                        <!-- Modul 3: Kalender & Program Jadwal -->
+                        <div class="sb-module-list-item" onclick="navigateTo('jadwal')">
+                            <div class="sb-module-left">
+                                <div class="sb-module-icon-box" style="background: rgba(246, 194, 62, 0.18); color: #d97706;">
+                                    📅
+                                </div>
+                                <div class="sb-module-info">
+                                    <div class="sb-module-title-row">
+                                        <h4 class="sb-module-title">Jadwal & Periodesasi Latihan</h4>
+                                        <span class="sb-module-badge" style="background: rgba(246, 194, 62, 0.18); color: #b45309;">Modul 3</span>
+                                    </div>
+                                    <p class="sb-module-desc">
+                                        Akses 45 sesi jadwal latihan makrosiklus persiapan Porprov, pembagian fase persiapan umum hingga pertandingan.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="sb-module-arrow">&#8250;</div>
+                        </div>
+
+                        <!-- Modul 4: Bank Materi & Video Teknik -->
+                        <div class="sb-module-list-item" onclick="navigateTo('materi')">
+                            <div class="sb-module-left">
+                                <div class="sb-module-icon-box" style="background: rgba(54, 185, 204, 0.12); color: #36b9cc;">
+                                    🎾
+                                </div>
+                                <div class="sb-module-info">
+                                    <div class="sb-module-title-row">
+                                        <h4 class="sb-module-title">Kurikulum Materi & Video Teknik</h4>
+                                        <span class="sb-module-badge" style="background: rgba(54, 185, 204, 0.1); color: #0891b2;">Modul 4</span>
+                                    </div>
+                                    <p class="sb-module-desc">
+                                        Akses 10 bab materi latihan resmi soft tenis dilengkapi peraga video tutorial, drill, dan standar capaian latihan.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="sb-module-arrow">&#8250;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 3: Panel Operasional & Analitik (Format List Vertikal 1 Kolom) -->
+                <div class="sb-panels-col">
+                    
+                    <!-- Panel 1: Antrean Pengajuan Latihan (Tabel Scrollable Khusus Mobile) -->
+                    <div class="sb-panel">
+                        <div class="sb-panel-header">
+                            <h3 class="sb-panel-title">
+                                <span>📋 Antrean Pengajuan Latihan Menunggu Evaluasi</span>
+                            </h3>
+                            <a onclick="navigateTo('manajemen-nilai')" style="font-size: 0.82rem; font-weight: 700; color: #4e73df; cursor: pointer; text-decoration: none;">
+                                Buka Semua Antrean &rarr;
+                            </a>
+                        </div>
+                        <div class="sb-scrollable-container">
+                            <div class="sb-scroll-hint">
+                                <span>👉 Geser tabel ke kanan/kiri untuk melihat seluruh rincian data</span>
+                            </div>
+                            <table class="sb-table-mini">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Nama Atlet</th>
+                                        <th>Materi</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashPendingTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #94a3b8; padding: 1.5rem;">
+                                            Memuat data antrean...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Radar Penguasaan Teknik Tim (Grafik Scrollable Khusus Mobile) -->
+                    <div class="sb-panel">
+                        <div class="sb-panel-header">
+                            <h3 class="sb-panel-title">
+                                <span>📊 Analisis Radar Penguasaan Teknik Tim (Soft Tennis)</span>
+                            </h3>
+                            <span style="font-size: 0.75rem; background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 12px; font-weight: 700;">
+                                Skor Maksimal 5.0
+                            </span>
+                        </div>
+                        <div class="sb-panel-body" style="text-align: center; padding-bottom: 1.5rem;">
+                            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.85rem;">
+                                Perbandingan rata-rata penguasaan teknik dasar tim terhadap standar target medali emas Porprov Jawa Barat.
+                            </p>
+                            <div class="sb-scrollable-container">
+                                <div class="sb-scroll-hint">
+                                    <span>👉 Geser grafik ke kanan/kiri jika terpotong pada layar ponsel</span>
+                                </div>
+                                <div class="sb-chart-scroll-inner">
+                                    <canvas id="dashTeamRadarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: Papan Pengumuman & Instruksi Pelatih -->
+                    <div class="sb-panel">
+                        <div class="sb-panel-header">
+                            <h3 class="sb-panel-title">
+                                <span>📢 Papan Pengumuman & Instruksi Pelatih</span>
+                            </h3>
+                            <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 3px 10px; border-radius: 12px; font-weight: 700;">
+                                Agenda TC 2026
+                            </span>
+                        </div>
+                        <div class="sb-panel-body">
+                            <div class="sb-notice-item" style="border-left-color: #4e73df;">
+                                <strong>🥊 Sparring Uji Coba vs Tim Pengcab Bogor</strong>
+                                <div>Simulasi pertandingan resmi tunggal dan ganda di Lapangan Tenis Wibawa Mukti. Seluruh atlet wajib membawa 2 raket.</div>
+                                <div class="sb-notice-date">📅 18 Oktober 2026 &bull; Pukul 08.00 WIB</div>
+                            </div>
+                            <div class="sb-notice-item" style="border-left-color: #1cc88a;">
+                                <strong>🏃 Tes Kebugaran & Pengukuran VO2 Max</strong>
+                                <div>Tes ketahanan fisik tahap akhir menjelang fase kompetisi utama di Stadion Wibawa Mukti.</div>
+                                <div class="sb-notice-date">📅 25 Oktober 2026 &bull; Pukul 07.00 WIB</div>
+                            </div>
+                            <div class="sb-notice-item" style="border-left-color: #f6c23e;">
+                                <strong>⚠️ Instruksi Pemulihan & Pencegahan Cedera</strong>
+                                <div>Wajib melakukan cooling down statis minimal 15 menit dan hidrasi teratur setelah setiap sesi drill intensif.</div>
+                                <div class="sb-notice-date">📌 Catatan Rutin Pelatih</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 4: Indikator Target Kesiapan Tim Menuju Target Emas -->
+                    <div class="sb-panel">
+                        <div class="sb-panel-header">
+                            <h3 class="sb-panel-title">
+                                <span>🎯 Target Kesiapan Tim Menuju Target Emas</span>
+                            </h3>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #1cc88a;">Target: 90%+</span>
+                        </div>
+                        <div class="sb-panel-body">
+                            <!-- Progress Item 1 -->
+                            <div class="sb-progress-group">
+                                <div class="sb-progress-header">
+                                    <span>Ketahanan Fisik & VO2 Max</span>
+                                    <span style="font-weight: 700; color: #4e73df;">88%</span>
+                                </div>
+                                <div class="sb-progress-track">
+                                    <div class="sb-progress-bar" style="width: 88%; background: #4e73df;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Item 2 -->
+                            <div class="sb-progress-group">
+                                <div class="sb-progress-header">
+                                    <span>Akurasi Pukulan Dasar (Groundstroke)</span>
+                                    <span style="font-weight: 700; color: #1cc88a;">80%</span>
+                                </div>
+                                <div class="sb-progress-track">
+                                    <div class="sb-progress-bar" style="width: 80%; background: #1cc88a;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Item 3 -->
+                            <div class="sb-progress-group">
+                                <div class="sb-progress-header">
+                                    <span>Konsistensi Servis & Return</span>
+                                    <span style="font-weight: 700; color: #36b9cc;">85%</span>
+                                </div>
+                                <div class="sb-progress-track">
+                                    <div class="sb-progress-bar" style="width: 85%; background: #36b9cc;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Item 4 -->
+                            <div class="sb-progress-group">
+                                <div class="sb-progress-header">
+                                    <span>Taktik Permainan Ganda & Simulasi Match</span>
+                                    <span style="font-weight: 700; color: #f6c23e;">75%</span>
+                                </div>
+                                <div class="sb-progress-track">
+                                    <div class="sb-progress-bar" style="width: 75%; background: #f6c23e;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Item 5 -->
+                            <div class="sb-progress-group">
+                                <div class="sb-progress-header">
+                                    <span>Mentalitas Bertanding & Fokus Juara</span>
+                                    <span style="font-weight: 700; color: #e74a3b;">70%</span>
+                                </div>
+                                <div class="sb-progress-track">
+                                    <div class="sb-progress-bar" style="width: 70%; background: #e74a3b;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
         <!-- MANAJEMEN ATLET SECTION (PELATIH) -->
         <div id="manajemen-atlet" class="section">
-            <h2 class="section-title">Manajemen Atlet</h2>
-            <div class="card" style="overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem;">
+                <h2 class="section-title" style="margin: 0;">Manajemen Atlet</h2>
+                <button class="sb-btn sb-btn-outline" onclick="navigateTo('dashboard-admin')">
+                    &#8592; Kembali ke Dashboard Admin
+                </button>
+            </div>
+
+            <div class="sb-actions">
+                <button class="sb-btn sb-btn-outline" onclick="openRegisterModal()">
+                    <span>+ Tambah Atlet</span>
+                </button>
+                <button class="sb-btn sb-btn-primary no-display" onclick="navigateTo('manajemen-nilai')">
+                    <span>📋 Antrean Evaluasi</span>
+                </button>
+            </div>
+
+            <div class="card table-responsive-card">
                 <table id="tabelAtlet" class="display" style="width:100%">
                     <thead>
                         <tr>
@@ -737,19 +1858,81 @@
 
         <!-- MANAJEMEN NILAI SECTION (PELATIH) -->
         <div id="manajemen-nilai" class="section">
-            <h2 class="section-title">Antrean Persetujuan Latihan</h2>
-            <div class="card" style="overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem;">
+                <h2 class="section-title" style="margin: 0;">Penilaian Latihan Atlet</h2>
+                <button class="sb-btn sb-btn-outline" onclick="navigateTo('dashboard-admin')">
+                    &#8592; Kembali ke Dashboard Admin
+                </button>
+            </div>
+            <div class="card table-responsive-card">
                 <table id="tabelNilai" class="display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Tgl Latihan</th>
+                            <th>No</th>
                             <th>Nama Atlet</th>
-                            <th>Materi</th>
-                            <th>Status</th>
+                            <th>Klub/Sekolah</th>
+                            <th>Tanggal Lahir</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tabelNilaiBody">
+                        <!-- Data akan dirender via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIWAYAT LATIHAN ATLET SECTION (PELATIH) -->
+        <div id="riwayat-latihan-atlet" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem;">
+                <div>
+                    <h2 class="section-title" style="margin: 0; text-align: left;">Riwayat Latihan Atlet</h2>
+                    <p id="riwayatLatihanNamaAtlet" style="color: var(--secondary); margin-top: 0.3rem; font-size: 1.5rem; font-weight: bold;">
+                        
+                    </p>
+                    <p id="riwayatLatihanSubTitle" style="color: var(--text-light); margin-top: 0.3rem; font-size: 0.92rem;">
+                        Memantau riwayat aktivitas dan sesi latihan individual atlet.
+                    </p>
+                </div>
+                <button class="sb-btn sb-btn-outline" onclick="navigateTo('manajemen-nilai')">
+                    &#8592; Kembali ke Penilaian Latihan
+                </button>
+            </div>
+
+            <!-- Area Grafik Garis (Perkembangan) -->
+            <div class="card" id="perkembangan-container" style="margin-top: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark); text-align: center;">Perkembangan Latihan</h3>
+                <div id="lineChartContainerPelatih">
+                    <div style="margin-bottom: 1rem; text-align: left;">
+                        <label style="font-weight: 500; font-size: 0.95rem; color: var(--text-dark);">Filter Materi Latihan: </label>
+                        <select id="filterChartMateriPelatih" onchange="renderRiwayatLatihanGrafik(siswaIni)" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; margin-left: 0.5rem;">
+                            <!-- Opsi dari JS -->
+                        </select>
+                    </div>
+                    <div style="width: 100%; overflow-x: auto; overflow-y: hidden;">
+                        <div style="position: relative; height: 300px; min-width: 800px; width: 100%;">
+                            <canvas id="perkembanganChartPelatih"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel Riwayat Penilaian Latihan Individu -->
+            <div class="card table-responsive-card" id="profilNilaiWrapper" style="margin-top: 1.5rem;">
+                <h3 style="margin-bottom: 1rem;">Riwayat Penilaian Latihan Individu</h3>
+                <table id="tabelProfilNilai" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Tgl Latihan</th>
+                            <th>Materi</th>
+                            <th>Fokus</th>
+                            <th>Nilai Teknik</th>
+                            <th>Intensitas</th>
+                            <th>Nilai Jasmani</th>
+                            <th>Nilai Mental</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelProfilNilaiBody">
                         <!-- Data akan dirender via JS -->
                     </tbody>
                 </table>
@@ -802,40 +1985,24 @@
                     </div>
                 </div>
 
-                <!-- Area Grafik Garis (Perkembangan) -->
+                <!-- Area Grafik Parameter Kesiapan Atlet (Fisik, Teknik, Mental, Intensitas) -->
                 <div class="card" style="margin-top: 1.5rem;">
-                    <h3 style="margin-bottom: 1rem; color: var(--text-dark); text-align: center;">Perkembangan Latihan</h3>
-                    <div id="lineChartContainerPelatih">
-                        <div style="margin-bottom: 1rem; text-align: left;">
-                            <label style="font-weight: 500; font-size: 0.95rem; color: var(--text-dark);">Filter Materi Latihan: </label>
-                            <select id="filterChartMateriPelatih" onchange="renderProfilGrafik(siswaIni)" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; margin-left: 0.5rem;">
-                                <!-- Opsi dari JS -->
-                            </select>
-                        </div>
+                    <h3 style="margin-bottom: 0.5rem; color: var(--text-dark); text-align: center;">Tren Parameter Kesiapan Atlet</h3>
+                    <p style="text-align: center; color: var(--text-light); font-size: 0.88rem; margin-bottom: 1.2rem;">
+                        Perkembangan 4 parameter latihan: 
+                        <span style="color: #10b981; font-weight: 600;">Fisik (Hijau)</span>, 
+                        <span style="color: #3b82f6; font-weight: 600;">Teknik (Biru)</span>, 
+                        <span style="color: #eab308; font-weight: 600;">Mental (Kuning)</span>, dan 
+                        <span style="color: #ef4444; font-weight: 600;">Intensitas RPE/2 (Merah)</span>.
+                    </p>
+                    <div id="kesiapanChartContainerPelatih">
                         <div style="width: 100%; overflow-x: auto; overflow-y: hidden;">
-                            <div style="position: relative; height: 300px; min-width: 800px; width: 100%;">
-                                <canvas id="perkembanganChartPelatih"></canvas>
+                            <div style="position: relative; height: 320px; min-width: 600px; width: 100%;">
+                                <canvas id="chartKesiapanAtletPelatih"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card" id="profilNilaiWrapper" style="display: none; margin-top: 1.5rem; overflow-x: auto;">
-                <h3 style="margin-bottom: 1rem;">Riwayat Penilaian Latihan Individu</h3>
-                <table id="tabelProfilNilai" class="display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Tgl Latihan</th>
-                            <th>Materi</th>
-                            <th>Status</th>
-                            <th>Nilai</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelProfilNilaiBody">
-                        <!-- Data akan dirender via JS -->
-                    </tbody>
-                </table>
             </div>
         </div>
 
@@ -883,7 +2050,7 @@
                     </select>
                 </div>
 
-                <div style="overflow-x: auto; width: 100%;">
+                <div class="table-responsive-card" style="width: 100%;">
                     <table id="riwayatTable" class="display" style="width:100%; text-align: left;">
                         <thead>
                             <tr>
@@ -964,6 +2131,119 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
                             <button type="submit" class="btn" style="width: 100%; background: var(--primary);">Setujui & Simpan Nilai</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Penilaian Terstruktur Atlet (Pelatih) -->
+    <div class="modal-overlay" id="modalPenilaianAtlet" onclick="closeModalPenilaianOverlay(event)">
+        <div class="modal-content" style="max-width: 650px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 style="margin: 0; color: var(--text-dark);">Form Penilaian Latihan Atlet</h3>
+                <button class="close-modal" type="button" onclick="tutupModalPenilaian()">&times;</button>
+            </div>
+            <div class="modal-body"  id="modalKeatas">
+                <form id="formPenilaianAtlet" onsubmit="submitPenilaianAtlet(event)">
+                    <input type="hidden" id="penilaianIdAtlet">
+                    
+                    <!-- Ringkasan Info Atlet -->
+                    <div style="margin-bottom: 1.2rem; padding: 1rem; background: var(--bg-hover); border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark);" id="penilaianNamaAtlet">-</div>
+                        <div style="font-size: 0.88rem; color: var(--text-light); margin-top: 0.25rem;">
+                            Klub/Sekolah: <span id="penilaianKlubAtlet">-</span> | TTL: <span id="penilaianTtlAtlet">-</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Materi Latihan -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Materi Latihan</label>
+                            <select id="penilaianMateri" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                                <option value="">-- Pilih Materi Latihan --</option>
+                            </select>
+                        </div>
+
+                        <!-- Tanggal & Fokus -->
+                        <!-- <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;"> -->
+                            <div class="form-group">
+                                <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Tanggal Latihan</label>
+                                <input type="date" id="penilaianTanggal" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Fokus Latihan</label>
+                                <select id="penilaianFokus" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                                    <option value="teknik dasar">Teknik Dasar</option>
+                                    <option value="fisik">Fisik</option>
+                                    <option value="taktik">Taktik Lapangan</option>
+                                    <option value="recovery">Recovery / Pemulihan</option>
+                                </select>
+                            </div>
+                        <!-- </div> -->
+
+                        <!-- Intensitas (RPE 1-10) -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <span>Intensitas Latihan (Skala RPE 1 - 10)</span>
+                                <span id="rpeDisplayVal" style="font-weight: 700; color: var(--primary);">Default: 5</span>
+                            </label>
+                            <small style="display: block; color: var(--text-light); margin-bottom: 0.5rem; font-size: 0.8rem;">
+                                Berdasarkan skala RPE (Rate of Perceived Exertion): 1 = Sangat Ringan / Santai s.d. 10 = Usaha Maksimal / Sangat Berat
+                            </small>
+                            <input type="number" id="penilaianIntensitas" min="1" max="10" value="5" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);" oninput="document.getElementById('rpeDisplayVal').innerText = this.value">
+                        </div>
+
+                        <!-- Fisik (Zona Heart Rate 1-5) -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Parameter Fisik (Zona Heart Rate 1 - 5)</label>
+                            <select id="penilaianFisik" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                                <option value="">-- Pilih Nilai Fisik --</option>
+                                <option value="5">5 - Sangat Baik (Zona 5: VO2 Max / Daya Tahan & Footwork Puncak)</option>
+                                <option value="4">4 - Baik (Zona 4: Ambang Anaerobik / Kecepatan & Stamina Baik)</option>
+                                <option value="3">3 - Sedang (Zona 3: Aerobik Stabil / Daya Tahan Cukup)</option>
+                                <option value="2">2 - Kurang (Zona 2: Cepat Lelah / Footwork Lambat)</option>
+                                <option value="1">1 - Sangat Kurang (Zona 1: Pemulihan Sangat Lambat / Stamina Habis)</option>
+                            </select>
+                        </div>
+
+                        <!-- Mental (1-5) -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Parameter Mental & Fokus (1 - 5)</label>
+                            <select id="penilaianMental" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                                <option value="">-- Pilih Nilai Mental --</option>
+                                <option value="5">5 - Flow State (Kondisi puncak, konsentrasi penuh tanpa tekanan)</option>
+                                <option value="4">4 - Controlled Focus (Fokus terkontrol, disiplin, dan tenang di poin kritis)</option>
+                                <option value="3">3 - Distracted (Fokus naik-turun / mudah terdistraksi saat rally)</option>
+                                <option value="2">2 - Anxious (Gelisah / cemas di bawah tekanan lawan)</option>
+                                <option value="1">1 - Burnout (Kelelahan mental ekstrem / kehilangan motivasi)</option>
+                            </select>
+                        </div>
+
+                        <!-- Teknik (1-5) -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Parameter Teknik (1 - 5)</label>
+                            <select id="penilaianTeknik" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                                <option value="">-- Pilih Nilai --</option>
+                                <option value="5">5 - Pukulan sangat akurat dan konsisten</option>
+                                <option value="4">4 - Pukulan cukup akurat</option>
+                                <option value="3">3 - Pukulan cukup namun kurang konsisten</option>
+                                <option value="2">2 - Pukulan kurang tepat</option>
+                                <option value="1">1 - Pukulan tidak tepat</option>
+                            </select>
+                        </div>
+
+                        <!-- Catatan -->
+                        <div class="form-group">
+                            <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Catatan Khusus Pelatih</label>
+                            <textarea id="penilaianCatatan" rows="3" placeholder="Masukkan evaluasi kualitatif, koreksi gerakan, atau catatan latihan..." style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; background: var(--bg); color: var(--text); font-family: inherit;"></textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 0.5rem;">
+                            <button type="submit" class="btn" style="width: 100%; background: var(--primary); padding: 0.85rem; font-weight: 600; font-size: 0.95rem; border-radius: 8px;">
+                                Simpan Penilaian
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -1774,6 +3054,9 @@
         window.addEventListener('DOMContentLoaded', async () => {
             // Tampilkan loading screen sementara fetch (opsional)
             await fetchAllData();
+            if (typeof initTanggalKejuaraan === 'function') {
+                await initTanggalKejuaraan();
+            }
             
             checkAuth();
             if(pelatih == true){
@@ -2417,6 +3700,300 @@
             }
 
             navigateTo('materi-detail');
+        }
+
+        // --- REAL-TIME COUNTDOWN WIDGET (ROAD TO PORPROV 2026) ---
+        // Catatan: Variabel target ini dapat dikonfigurasi dinamis oleh pelatih di kemudian hari (lihat PR_dependansi.md)
+        let porprovTargetDate = new Date("2026-11-01T08:00:00").getTime();
+
+        function updatePorprovCountdown() {
+            const now = new Date().getTime();
+            const distance = porprovTargetDate - now;
+
+            const daysEl = document.getElementById('cdDays');
+            const hoursEl = document.getElementById('cdHours');
+            const minutesEl = document.getElementById('cdMinutes');
+            const secondsEl = document.getElementById('cdSeconds');
+
+            if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+            if (distance <= 0) {
+                daysEl.innerText = "00";
+                hoursEl.innerText = "00";
+                minutesEl.innerText = "00";
+                secondsEl.innerText = "00";
+                const label = document.getElementById('countdownTargetLabel');
+                if (label) label.innerText = "Porprov Jabar 2026 Sedang Berlangsung!";
+                const dashCountdownEl = document.getElementById('dashCountdown');
+                if (dashCountdownEl) dashCountdownEl.innerText = "0";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.innerText = String(days).padStart(2, '0');
+            hoursEl.innerText = String(hours).padStart(2, '0');
+            minutesEl.innerText = String(minutes).padStart(2, '0');
+            secondsEl.innerText = String(seconds).padStart(2, '0');
+
+            const dashCountdownEl = document.getElementById('dashCountdown');
+            if (dashCountdownEl) {
+                dashCountdownEl.innerText = days;
+            }
+        }
+
+        setInterval(updatePorprovCountdown, 1000);
+        updatePorprovCountdown();
+
+        // --- PENGATURAN TANGGAL KEJUARAAN (WIDGET COUNTDOWN) ---
+        async function initTanggalKejuaraan() {
+            const card = document.getElementById('countdown-set');
+            if (!card) return;
+
+            // Buat kontainer setting jika belum ada
+            let settingWrapper = document.getElementById('countdownSettingWrapper');
+            let dateInput = document.getElementById('inputTanggalKejuaraan');
+
+            if (!settingWrapper) {
+                settingWrapper = document.createElement('div');
+                settingWrapper.id = 'countdownSettingWrapper';
+                settingWrapper.style.marginTop = '1.1rem';
+                settingWrapper.style.paddingTop = '0.9rem';
+                settingWrapper.style.borderTop = '1px solid rgba(255, 255, 255, 0.2)';
+                settingWrapper.style.display = 'flex';
+                settingWrapper.style.alignItems = 'center';
+                settingWrapper.style.justifyContent = 'center';
+                settingWrapper.style.flexWrap = 'wrap';
+                settingWrapper.style.gap = '0.65rem';
+
+                const dateLabel = document.createElement('label');
+                dateLabel.htmlFor = 'inputTanggalKejuaraan';
+                dateLabel.innerText = 'Klik untuk ubah tanggal kejuaraan:';
+                dateLabel.style.fontSize = '0.86rem';
+                dateLabel.style.fontWeight = '600';
+                dateLabel.style.color = '#999';
+                dateLabel.style.cursor = 'pointer';
+
+                dateInput = document.createElement('input');
+                dateInput.type = 'date';
+                dateInput.id = 'inputTanggalKejuaraan';
+                dateInput.readOnly = true;
+                dateInput.style.background = 'rgba(255, 255, 255, 0.18)';
+                dateInput.style.border = '1px solid rgba(255, 255, 255, 0.4)';
+                dateInput.style.color = '#ffffff';
+                dateInput.style.borderRadius = '8px';
+                dateInput.style.padding = '0.4rem 0.75rem';
+                dateInput.style.fontSize = '0.88rem';
+                dateInput.style.cursor = 'pointer';
+                dateInput.style.outline = 'none';
+                dateInput.title = 'Klik untuk mengubah tanggal kejuaraan';
+
+                // Logika Klik & Konfirmasi
+                let isDateUnlocked = false;
+
+                const requestDateUnlock = (e) => {
+                    if (!isDateUnlocked) {
+                        e.preventDefault();
+                        const confirmChange = confirm("Apakah Anda ingin mengubah tanggal kejuaraan?");
+                        if (confirmChange) {
+                            isDateUnlocked = true;
+                            dateInput.readOnly = false;
+                            dateInput.focus();
+                            if (typeof dateInput.showPicker === 'function') {
+                                try { dateInput.showPicker(); } catch (err) {}
+                            }
+                        }
+                    }
+                };
+
+                dateInput.addEventListener('click', requestDateUnlock);
+                dateLabel.addEventListener('click', requestDateUnlock);
+
+                dateInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        isDateUnlocked = false;
+                        dateInput.readOnly = true;
+                    }, 250);
+                });
+
+                // Event Onchange: Simpan tanggal terbaru ke database
+                dateInput.addEventListener('change', async function () {
+                    const selectedDate = this.value; // YYYY-MM-DD
+                    if (!selectedDate) return;
+
+                    isDateUnlocked = false;
+                    this.readOnly = true;
+
+                    const targetDateTime = `${selectedDate} 08:00:00`;
+                    try {
+                        if (typeof showLoading === 'function') showLoading();
+
+                        const baseUrl = (typeof SERVER_BASE !== 'undefined' ? SERVER_BASE : 'http://localhost:3000');
+                        const res = await fetch(`${baseUrl}/api/pengaturan_turnamen`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tanggal_target: targetDateTime,
+                                nama_turnamen: 'Porprov Jabar 2026',
+                                label_badge: 'ROAD TO PORPROV JABAR 2026'
+                            })
+                        });
+
+                        if (res.ok) {
+                            porprovTargetDate = new Date(`${selectedDate}T08:00:00`).getTime();
+
+                            const dateObj = new Date(`${selectedDate}T08:00:00`);
+                            const formatted = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                            const targetLabel = document.getElementById('countdownTargetLabel');
+                            if (targetLabel) {
+                                targetLabel.innerText = `Target Pembukaan: ${formatted}`;
+                            }
+
+                            updatePorprovCountdown();
+                            if (typeof renderDashboardAdmin === 'function') {
+                                renderDashboardAdmin();
+                            }
+
+                            if (typeof showNotification === 'function') {
+                                showNotification(`Tanggal kejuaraan berhasil diubah menjadi ${formatted} dan disimpan ke database!`, 'success');
+                            } else {
+                                alert(`Tanggal kejuaraan berhasil diubah menjadi ${formatted}!`);
+                            }
+                        } else {
+                            const errData = await res.json().catch(() => ({}));
+                            throw new Error(errData.error || 'Gagal menyimpan ke server');
+                        }
+                    } catch (err) {
+                        console.error('Gagal menyimpan tanggal kejuaraan:', err);
+                        if (typeof showNotification === 'function') {
+                            showNotification(`Gagal menyimpan tanggal: ${err.message}`, 'error');
+                        } else {
+                            alert(`Gagal menyimpan tanggal: ${err.message}`);
+                        }
+                    } finally {
+                        if (typeof hideLoading === 'function') hideLoading();
+                    }
+                });
+
+                settingWrapper.appendChild(dateLabel);
+                settingWrapper.appendChild(dateInput);
+                card.appendChild(settingWrapper);
+            }
+
+            // Inisialisasi: Ambil data tanggal target dari database
+            try {
+                const baseUrl = (typeof SERVER_BASE !== 'undefined' ? SERVER_BASE : 'http://localhost:3000');
+                const res = await fetch(`${baseUrl}/api/pengaturan_turnamen`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const row = Array.isArray(data) ? data[0] : data;
+                    if (row && row.tanggal_target) {
+                        const dateOnly = row.tanggal_target.split(' ')[0] || row.tanggal_target.split('T')[0];
+                        if (dateInput) {
+                            dateInput.value = dateOnly;
+                        }
+                        porprovTargetDate = new Date(row.tanggal_target.replace(' ', 'T')).getTime();
+
+                        const dateObj = new Date(row.tanggal_target.replace(' ', 'T'));
+                        const formatted = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                        const targetLabel = document.getElementById('countdownTargetLabel');
+                        if (targetLabel) {
+                            targetLabel.innerText = `Target Pembukaan: ${formatted}`;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn('Gagal memuat pengaturan tanggal dari database, gunakan default:', err);
+                if (dateInput && !dateInput.value) {
+                    dateInput.value = '2026-11-01';
+                }
+            }
+
+            updatePorprovCountdown();
+        }
+
+        // Panggil initTanggalKejuaraan secara mandiri
+        initTanggalKejuaraan();
+
+        // --- LOGIKA JADWAL LATIHAN TERDEKAT (#acara) ---
+        function renderJadwalTerdekat() {
+            const container = document.getElementById('jadwalTerdekatContent');
+            if (!container) return;
+
+            if (typeof dataJadwal === 'undefined' || !dataJadwal || dataJadwal.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-light); padding: 1.5rem;">Data jadwal latihan belum tersedia.</p>';
+                return;
+            }
+
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            // Urutkan jadwal berdasarkan tanggal ascending
+            const sorted = [...dataJadwal].sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+
+            // Cari jadwal yang tanggalnya >= hari ini (terdekat ke depan)
+            let terdekat = null;
+            for (let i = 0; i < sorted.length; i++) {
+                const itemDate = new Date(sorted[i].tanggal);
+                if (itemDate >= today) {
+                    terdekat = sorted[i];
+                    break; // Ambil data terdekat pertama lalu break
+                }
+            }
+
+            // Jika seluruh jadwal sudah lewat dari hari ini, gunakan jadwal terdekat terakhir
+            if (!terdekat) {
+                terdekat = sorted[sorted.length - 1];
+            }
+
+            const dObj = new Date(terdekat.tanggal);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const formattedTanggal = dObj.toLocaleDateString('id-ID', options);
+
+            container.innerHTML = `
+                <div style="background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; text-align: left; max-width: 800px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.25rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+                        <div>
+                            <span style="display: inline-block; font-size: 0.78rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.4rem;">
+                                📅 Sesi Latihan Terdekat
+                            </span>
+                            <h3 style="font-size: 1.25rem; color: var(--secondary); margin: 0;">${formattedTanggal}</h3>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600; color: var(--primary); font-size: 0.95rem;">⏰ ${terdekat.sesi || '-'}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-light); margin-top: 2px;">📍 ${terdekat.tempat || '-'}</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                        <div style="background: white; border: 1px solid #f1f5f9; border-radius: 10px; padding: 1rem;">
+                            <strong style="color: var(--secondary); font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">🎯 Latihan Utama:</strong>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 0.95rem; line-height: 1.5;">${terdekat.utama || '-'}</p>
+                        </div>
+                        <div style="background: white; border: 1px solid #f1f5f9; border-radius: 10px; padding: 1rem;">
+                            <strong style="color: var(--primary); font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">💪 Latihan Fisik/Penunjang:</strong>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 0.95rem; line-height: 1.5;">${terdekat.latihan || '-'}</p>
+                        </div>
+                        <div style="background: white; border: 1px solid #f1f5f9; border-radius: 10px; padding: 1rem;">
+                            <strong style="color: var(--accent); font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">🔥 Pemanasan:</strong>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 0.95rem; line-height: 1.5;">${terdekat.pemanasan || '-'}</p>
+                        </div>
+                        <div style="background: white; border: 1px solid #f1f5f9; border-radius: 10px; padding: 1rem;">
+                            <strong style="color: #6366f1; font-size: 0.88rem; display: block; margin-bottom: 0.3rem;">🎾 Simulasi / Game:</strong>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 0.95rem; line-height: 1.5;">${terdekat.simulasi || '-'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        renderJadwalTerdekat();
+
+        function gantiTanggal(){
+            document.getElementById("inputTanggalKejuaraan").click();
         }
 
         // Init Materi digabung dengan App Initialize di atas
