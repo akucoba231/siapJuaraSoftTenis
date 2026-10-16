@@ -440,78 +440,45 @@ function renderGrafikRiwayat() {
 function renderProfilGrafik(id_atlet) {
     if (!id_atlet) return;
     
-    // Ambil data spesifik atlet ini (hanya yang sudah dinilai)
-    const chartData = dataLatihan
-        .filter(d => d.id_atlet === id_atlet && d.nilai && !isNaN(d.nilai))
-        .sort((a, b) => new Date(a.tanggal_latihan) - new Date(b.tanggal_latihan));
+    // Ambil data spesifik atlet ini dari dataRiwayatLatihan (hanya yang memiliki nilai teknik valid)
+    const sourceData = (typeof dataRiwayatLatihan !== 'undefined' && dataRiwayatLatihan.length > 0) 
+        ? dataRiwayatLatihan 
+        : (typeof dataLatihan !== 'undefined' ? dataLatihan : []);
+
+    const chartData = sourceData
+        .filter(d => d.id_atlet === id_atlet && (d.teknik !== null && !isNaN(d.teknik) || d.nilai !== null && !isNaN(d.nilai)))
+        .sort((a, b) => new Date(a.tanggal || a.tanggal_latihan) - new Date(b.tanggal || b.tanggal_latihan));
     
-    // 1. Populate Dropdown Filter for Line Chart
-    const uniqueMateri = [...new Set(chartData.map(d => d.materi_latihan))];
-    const selectMateri = $('#filterChartMateriPelatih');
-    const currentSelected = selectMateri.val();
-    selectMateri.empty();
-    
-    if(uniqueMateri.length > 0) {
-        uniqueMateri.forEach(m => {
-            selectMateri.append(`<option value="${m}">${m}</option>`);
-        });
-        if (currentSelected && uniqueMateri.includes(currentSelected)) {
-            selectMateri.val(currentSelected);
+    // Helper function untuk resolusi nama materi
+    const getMateriName = (d) => {
+        if (d.nama_materi) return d.nama_materi;
+        if (d.materi_latihan) return d.materi_latihan;
+        if (typeof dataMateriPenilaian !== 'undefined' && dataMateriPenilaian.length > 0) {
+            const found = dataMateriPenilaian.find(m => m.id_materi === d.id_materi);
+            if (found) return found.nama_materi;
         }
-    } else {
-        selectMateri.append('<option value="">Belum ada data nilai</option>');
+        if (typeof listMateriLatihan !== 'undefined' && d.id_materi && listMateriLatihan[d.id_materi - 1]) {
+            return listMateriLatihan[d.id_materi - 1];
+        }
+        return `Materi ${d.id_materi || '-'}`;
+    };
+
+    // Helper function untuk mengambil nilai teknik (prioritas: d.teknik, fallback: d.nilai)
+    const getTeknikScore = (d) => {
+        if (d.teknik !== null && !isNaN(d.teknik) && d.teknik !== undefined) return parseInt(d.teknik);
+        if (d.nilai !== null && !isNaN(d.nilai) && d.nilai !== undefined) return parseInt(d.nilai);
+        return 0;
+    };
+
+    // 1 & 2. Render Line Chart Perkembangan Latihan (jika elemen tersedia di DOM)
+    if (typeof renderRiwayatLatihanGrafik === 'function') {
+        renderRiwayatLatihanGrafik(id_atlet);
     }
 
-    const selectedMateri = selectMateri.val();
-
-    // 2. Render Line Chart (Filtered by Dropdown)
-    const lineDataFiltered = chartData.filter(d => d.materi_latihan === selectedMateri);
-    const lineLabels = lineDataFiltered.map(d => d.tanggal_latihan);
-    const lineNilai = lineDataFiltered.map(d => parseInt(d.nilai));
-
-    if (window.myPerkembanganChartPelatih) {
-        window.myPerkembanganChartPelatih.destroy();
-    }
-
-    const ctxLine = document.getElementById('perkembanganChartPelatih');
-    if (ctxLine && selectedMateri) {
-        window.myPerkembanganChartPelatih = new Chart(ctxLine, {
-            type: 'line',
-            data: {
-                labels: lineLabels,
-                datasets: [{
-                    label: `Perkembangan: ${selectedMateri}`,
-                    data: lineNilai,
-                    borderColor: '#065f46',
-                    backgroundColor: 'rgba(6, 95, 70, 0.1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#f59e0b',
-                    pointRadius: 5,
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 5,
-                        ticks: { stepSize: 1 }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'top', align: 'start' }
-                }
-            }
-        });
-    }
-
-    // 3. Render Radar Chart (Latest score for each unique materi)
+    // 3. Render Radar Chart: canvas profilAtletChartPelatih (Nilai terbaru dari field teknik per materi)
     const latestScores = {};
     chartData.forEach(d => {
-        latestScores[d.materi_latihan] = parseInt(d.nilai);
+        latestScores[getMateriName(d)] = getTeknikScore(d);
     });
 
     const radarLabels = Object.keys(latestScores);
@@ -528,7 +495,7 @@ function renderProfilGrafik(id_atlet) {
             data: {
                 labels: radarLabels,
                 datasets: [{
-                    label: 'Profil Kekuatan Terkini',
+                    label: 'Profil Penguasaan Teknik Terkini',
                     data: radarData,
                     backgroundColor: 'rgba(59, 130, 246, 0.2)',
                     borderColor: 'rgba(59, 130, 246, 1)',
@@ -547,6 +514,121 @@ function renderProfilGrafik(id_atlet) {
                         suggestedMin: 0,
                         suggestedMax: 5,
                         ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. Render Line Chart 4 Parameter Kesiapan: canvas chartKesiapanAtletPelatih (Fisik, Teknik, Mental, Intensitas / 2)
+    if (window.myKesiapanChartPelatih) {
+        window.myKesiapanChartPelatih.destroy();
+    }
+
+    const ctxKesiapan = document.getElementById('chartKesiapanAtletPelatih');
+    if (ctxKesiapan && chartData.length > 0) {
+        const kesiapanLabels = chartData.map(d => d.tanggal || d.tanggal_latihan);
+        const dataFisik = chartData.map(d => (d.fisik !== null && !isNaN(d.fisik) && d.fisik !== undefined) ? parseInt(d.fisik) : 3);
+        const dataTeknik = chartData.map(d => getTeknikScore(d));
+        const dataMental = chartData.map(d => (d.mental !== null && !isNaN(d.mental) && d.mental !== undefined) ? parseInt(d.mental) : 3);
+        const dataIntensitas = chartData.map(d => {
+            const raw = (d.intensitas !== null && !isNaN(d.intensitas) && d.intensitas !== undefined) ? parseFloat(d.intensitas) : 5;
+            return parseFloat((raw / 2).toFixed(1));
+        });
+
+        window.myKesiapanChartPelatih = new Chart(ctxKesiapan, {
+            type: 'line',
+            data: {
+                labels: kesiapanLabels,
+                datasets: [
+                    {
+                        label: 'Fisik (Zona HR 1-5)',
+                        data: dataFisik,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Teknik (Skala 1-5)',
+                        data: dataTeknik,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Mental (Skala 1-5)',
+                        data: dataMental,
+                        borderColor: '#eab308',
+                        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#eab308',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Intensitas (RPE / 2)',
+                        data: dataIntensitas,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 2.5,
+                        borderDash: [5, 4],
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6,
+                        ticks: { stepSize: 1 },
+                        title: {
+                            display: true,
+                            text: 'Skala Nilai (Maks 5)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tanggal Sesi Latihan'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top', align: 'center' },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                const idx = context[0].dataIndex;
+                                const item = chartData[idx];
+                                return `${item.tanggal || item.tanggal_latihan} | Materi: ${getMateriName(item)}`;
+                            },
+                            label: function(context) {
+                                if (context.dataset.label.includes('Intensitas')) {
+                                    const rawRpe = Math.round(context.parsed.y * 2);
+                                    return ` Intensitas: RPE ${rawRpe}/10 (Normalisasi: ${context.parsed.y}/5)`;
+                                }
+                                return ` ${context.dataset.label}: ${context.parsed.y} / 5`;
+                            }
+                        }
                     }
                 }
             }
@@ -689,7 +771,7 @@ function kembaliOn(){
     if(pelatih === true){
         kembali.style.display = "inline-block";
         kembali.onclick = () => {
-            document.getElementById('untukKembali').click();
+            navigateTo('manajemen-atlet');
         }
     }
     else {
@@ -705,13 +787,9 @@ function lihatProfilAtlet(id_atlet) {
         document.getElementById('profilTag').textContent = "Profil Akun Atlet";
         kembaliOn();
         renderProfil(id_atlet);
-        renderProfilNilai(id_atlet);
         if (typeof renderProfilGrafik === 'function') {
             renderProfilGrafik(id_atlet);
         }
-        
-        const wrapperNilai = document.getElementById('profilNilaiWrapper');
-        if (wrapperNilai) wrapperNilai.style.display = 'block';
         
         const wrapperGrafik = document.getElementById('profilGrafikWrapper');
         if (wrapperGrafik) wrapperGrafik.style.display = 'block';
@@ -741,49 +819,304 @@ async function hapusAtlet(id_atlet) {
 
 function renderTabelManajemenNilai() {
     if (dtNilai) {
-        dtNilai.clear().rows.add(dataLatihan).draw();
+        dtNilai.clear().rows.add(dataAtlet).draw();
         return;
     }
 
-    // console.log(typeof dataLatihan);
-    // console.log(dataLatihan.length);
-
-    let tmpDataLatihan = dataLatihan.filter(item => item.status === "diajukan");
-
-    // console.log(typeof tmpDataLatihan);
-    // console.log(tmpDataLatihan.length);
-    
-
-    
     dtNilai = $('#tabelNilai').DataTable({
-        data: tmpDataLatihan, //dataLatihan,
-        order: [[0, 'desc']],
+        data: dataAtlet,
         columns: [
-            { data: 'tanggal_latihan' },
             { 
-                data: 'id_atlet',
-                render: function(data) {
-                    const atlet = dataAtlet.find(a => a.id_atlet === data);
-                    return atlet ? atlet.nama_atlet : 'Unknown';
-                }
+                data: null, 
+                render: function (data, type, row, meta) { return meta.row + 1; }
             },
-            { data: 'materi_latihan' },
-            { data: 'status' },
+            { data: 'nama_atlet' },
+            { data: 'club' },
+            { data: 'ttl' },
             { 
                 data: null,
                 render: function (data, type, row) {
-                    if (row.status === 'diajukan') {
-                        return `<button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="openPelatihLatihanModal('${row.id_latihan}')">Evaluasi</button>`;
-                    }
-                    return `<span style="color: var(--text-light); font-size: 0.8rem;">Sudah dinilai</span>`;
+                    return `
+                        <div style="display: flex; flex-direction: column; gap: 5px; width: 100%; min-width: 135px;">
+                            <button class="btn" style="padding: 0.45rem 0.8rem; font-size: 0.82rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; text-align: center; width: 100%; white-space: nowrap; box-sizing: border-box;" onclick="bukaModalPenilaian('${row.id_atlet}')">Lakukan Penilaian</button>
+                            <button class="btn" style="padding: 0.45rem 0.8rem; font-size: 0.82rem; background: var(--accent); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; text-align: center; width: 100%; white-space: nowrap; box-sizing: border-box;" onclick="bukaRiwayatLatihanAtlet('${row.id_atlet}')">Riwayat Latihan</button>
+                        </div>
+                    `;
                 }
             }
         ]
     });
 }
 
+function bukaRiwayatLatihanAtlet(id_atlet) {
+    siswaIni = id_atlet;
+    const atlet = (typeof dataAtlet !== 'undefined') ? dataAtlet.find(a => a.id_atlet === id_atlet) : null;
+    const elNama = document.getElementById('riwayatLatihanNamaAtlet');
+    const elSub = document.getElementById('riwayatLatihanSubTitle');
+    if (atlet) {
+        if (elNama) elNama.textContent = `${atlet.nama_atlet}`;
+        if (elSub) elSub.textContent = `Klub/Sekolah: ${atlet.club || '-'} | TTL: ${atlet.ttl || '-'}`;
+    } else {
+        if (elNama) elNama.textContent = "Riwayat Latihan Atlet";
+        if (elSub) elSub.textContent = "Memantau riwayat aktivitas dan sesi latihan individual atlet.";
+    }
+    navigateTo('riwayat-latihan-atlet');
+    setTimeout(() => {
+        renderRiwayatLatihanGrafik(id_atlet);
+        renderProfilNilai(id_atlet);
+    }, 60);
+}
+
+function renderRiwayatLatihanGrafik(id_atlet) {
+    if (!id_atlet) return;
+
+    const sourceData = (typeof dataRiwayatLatihan !== 'undefined' && dataRiwayatLatihan.length > 0) 
+        ? dataRiwayatLatihan 
+        : (typeof dataLatihan !== 'undefined' ? dataLatihan : []);
+
+    const chartData = sourceData
+        .filter(d => d.id_atlet === id_atlet && (d.teknik !== null && !isNaN(d.teknik) || d.nilai !== null && !isNaN(d.nilai)))
+        .sort((a, b) => new Date(a.tanggal || a.tanggal_latihan) - new Date(b.tanggal || b.tanggal_latihan));
+
+    const getMateriName = (d) => {
+        if (d.nama_materi) return d.nama_materi;
+        if (d.materi_latihan) return d.materi_latihan;
+        if (typeof dataMateriPenilaian !== 'undefined' && dataMateriPenilaian.length > 0) {
+            const found = dataMateriPenilaian.find(m => m.id_materi === d.id_materi);
+            if (found) return found.nama_materi;
+        }
+        if (typeof listMateriLatihan !== 'undefined' && d.id_materi && listMateriLatihan[d.id_materi - 1]) {
+            return listMateriLatihan[d.id_materi - 1];
+        }
+        return `Materi ${d.id_materi || '-'}`;
+    };
+
+    const getTeknikScore = (d) => {
+        if (d.teknik !== null && !isNaN(d.teknik) && d.teknik !== undefined) return parseInt(d.teknik);
+        if (d.nilai !== null && !isNaN(d.nilai) && d.nilai !== undefined) return parseInt(d.nilai);
+        return 0;
+    };
+
+    const uniqueMateri = [...new Set(chartData.map(d => getMateriName(d)))];
+    const selectMateri = $('#filterChartMateriPelatih');
+    const currentSelected = selectMateri.val();
+    selectMateri.empty();
+    
+    if (uniqueMateri.length > 0) {
+        uniqueMateri.forEach(m => {
+            selectMateri.append(`<option value="${m}">${m}</option>`);
+        });
+        if (currentSelected && uniqueMateri.includes(currentSelected)) {
+            selectMateri.val(currentSelected);
+        }
+    } else {
+        selectMateri.append('<option value="">Belum ada data nilai</option>');
+    }
+
+    const selectedMateri = selectMateri.val();
+    const lineDataFiltered = chartData.filter(d => getMateriName(d) === selectedMateri);
+    const lineLabels = lineDataFiltered.map(d => d.tanggal || d.tanggal_latihan);
+    const lineNilai = lineDataFiltered.map(d => getTeknikScore(d));
+
+    if (window.myPerkembanganChartPelatih) {
+        window.myPerkembanganChartPelatih.destroy();
+    }
+
+    const ctxLine = document.getElementById('perkembanganChartPelatih');
+    if (ctxLine && selectedMateri && lineLabels.length > 0) {
+        window.myPerkembanganChartPelatih = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: lineLabels,
+                datasets: [{
+                    label: `Perkembangan Teknik: ${selectedMateri}`,
+                    data: lineNilai,
+                    borderColor: '#065f46',
+                    backgroundColor: 'rgba(6, 95, 70, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#f59e0b',
+                    pointRadius: 5,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top', align: 'start' }
+                }
+            }
+        });
+    }
+}
+
+function bukaModalPenilaian(id_atlet) {
+    const atlet = dataAtlet.find(a => a.id_atlet === id_atlet);
+    if (!atlet) {
+        showNotification("Data atlet tidak ditemukan", "error");
+        return;
+    }
+
+    // Set info atlet
+    document.getElementById('penilaianIdAtlet').value = atlet.id_atlet;
+    document.getElementById('penilaianNamaAtlet').innerText = atlet.nama_atlet || '-';
+    document.getElementById('penilaianKlubAtlet').innerText = atlet.club || '-';
+    document.getElementById('penilaianTtlAtlet').innerText = atlet.ttl || '-';
+
+    // Set default tanggal hari ini
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('penilaianTanggal').value = today;
+
+    // Populate dropdown materi penilaian
+    const selectMateri = document.getElementById('penilaianMateri');
+    selectMateri.innerHTML = '<option value="">-- Pilih Materi Latihan --</option>';
+
+    if (typeof dataMateriPenilaian !== 'undefined' && dataMateriPenilaian.length > 0) {
+        dataMateriPenilaian.forEach(m => {
+            selectMateri.innerHTML += `<option value="${m.id_materi}">${m.nama_materi}</option>`;
+        });
+    } else if (typeof listMateriLatihan !== 'undefined' && listMateriLatihan.length > 0) {
+        listMateriLatihan.forEach((m, idx) => {
+            selectMateri.innerHTML += `<option value="${idx + 1}">${m}</option>`;
+        });
+    }
+
+    // Reset nilai form default
+    document.getElementById('penilaianFokus').value = 'teknik dasar';
+    document.getElementById('penilaianIntensitas').value = 5;
+    document.getElementById('rpeDisplayVal').innerText = '5';
+    document.getElementById('penilaianFisik').value = '';
+    document.getElementById('penilaianMental').value = '';
+    document.getElementById('penilaianTeknik').value = '';
+    document.getElementById('penilaianCatatan').value = '';
+
+    const modal = document.getElementById('modalPenilaianAtlet');
+    if (modal) {
+        modal.classList.add('active');
+        const modalContent = document.getElementById('modalKeatas');
+        if (modalContent) 
+            {
+                setTimeout(()=>{
+                    modalContent.scrollTo(
+                    {
+                        top: 0,
+                        behavior: 'smooth'
+                    }
+                    );
+                }, 200);
+            }
+        modal.scrollTop = 0;
+    }
+}
+
+function tutupModalPenilaian() {
+    const modal = document.getElementById('modalPenilaianAtlet');
+    if (modal) {
+        modal.classList.remove('active');
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) modalContent.scrollTop = 0;
+    }
+}
+
+function closeModalPenilaianOverlay(e) {
+    if (e.target.id === 'modalPenilaianAtlet') {
+        tutupModalPenilaian();
+    }
+}
+
+async function submitPenilaianAtlet(e) {
+    e.preventDefault();
+    const id_atlet = document.getElementById('penilaianIdAtlet').value;
+    const id_materi = document.getElementById('penilaianMateri').value;
+    const tanggal = document.getElementById('penilaianTanggal').value;
+    const fokus = document.getElementById('penilaianFokus').value;
+    const intensitas = document.getElementById('penilaianIntensitas').value;
+    const fisik = document.getElementById('penilaianFisik').value;
+    const mental = document.getElementById('penilaianMental').value;
+    const teknik = document.getElementById('penilaianTeknik').value;
+    const catatan = document.getElementById('penilaianCatatan').value;
+
+    if (!id_materi) {
+        showNotification("Silakan pilih materi latihan terlebih dahulu", "error");
+        return;
+    }
+    if (!fisik || !mental || !teknik) {
+        showNotification("Harap lengkapi penilaian fisik, mental, dan teknik", "error");
+        return;
+    }
+
+    const payload = {
+        id_riwayat_latihan: "rwl-" + Date.now(),
+        id_materi: parseInt(id_materi),
+        id_atlet: id_atlet,
+        tanggal: tanggal,
+        fokus: fokus,
+        intensitas: parseInt(intensitas),
+        fisik: parseInt(fisik),
+        mental: parseInt(mental),
+        teknik: parseInt(teknik),
+        catatan: catatan
+    };
+    showLoading();
+    try {
+        const res = await fetch(`${API_BASE}/tabel_riwayat_latihan`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+            tutupModalPenilaian();
+            document.getElementById('formPenilaianAtlet').reset();
+            showNotification("Penilaian atlet berhasil disimpan ke database!", "success");
+            if (typeof fetchAllData === 'function') {
+                await fetchAllData();
+            }
+            if (typeof siswaIni !== 'undefined' && siswaIni) {
+                renderProfilNilai(siswaIni);
+                if (typeof renderProfilGrafik === 'function') {
+                    renderProfilGrafik(siswaIni);
+                }
+            }
+        } else {
+            const err = await res.json().catch(() => ({}));
+            showNotification(err.error || "Gagal menyimpan penilaian.", "error");
+        }
+    } catch (err) {
+        showNotification("Terjadi kesalahan koneksi ke server.", "error");
+    }
+    finally {
+        hideLoading();
+    }
+}
+
 function renderProfilNilai(id_atlet) {
-    const riwayat = dataLatihan.filter(d => d.id_atlet === id_atlet);  //&& d.status !== 'diajukan');
+    const sourceData = (typeof dataRiwayatLatihan !== 'undefined' && dataRiwayatLatihan.length > 0)
+        ? dataRiwayatLatihan
+        : (typeof dataLatihan !== 'undefined' ? dataLatihan : []);
+
+    const riwayat = sourceData.filter(d => d.id_atlet === id_atlet);
+
+    const getMateriName = (d) => {
+        if (d.nama_materi) return d.nama_materi;
+        if (d.materi_latihan) return d.materi_latihan;
+        if (typeof dataMateriPenilaian !== 'undefined' && dataMateriPenilaian.length > 0) {
+            const found = dataMateriPenilaian.find(m => m.id_materi === d.id_materi);
+            if (found) return found.nama_materi;
+        }
+        if (typeof listMateriLatihan !== 'undefined' && d.id_materi && listMateriLatihan[d.id_materi - 1]) {
+            return listMateriLatihan[d.id_materi - 1];
+        }
+        return `Materi ${d.id_materi || '-'}`;
+    };
     
     if (dtProfilNilai) {
         dtProfilNilai.clear().rows.add(riwayat).draw();
@@ -794,10 +1127,57 @@ function renderProfilNilai(id_atlet) {
         data: riwayat,
         order: [[0, 'desc']],
         columns: [
-            { data: 'tanggal_latihan' },
-            { data: 'materi_latihan' },
-            { data: 'status' },
-            { data: 'nilai' }
+            { 
+                data: null,
+                render: function(d) {
+                    return d.tanggal || d.tanggal_latihan || '-';
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    return getMateriName(d);
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    const fokusText = d.fokus || (d.status ? d.status : 'Teknik Dasar');
+                    return `<span class="badge" style="background: var(--bg-hover); color: var(--text-dark); text-transform: capitalize; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">${fokusText}</span>`;
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    const skor = (d.teknik !== null && d.teknik !== undefined) ? d.teknik : (d.nilai || '-');
+                    let translasi = Number(skor); //cekTeknik(Number(skor));
+                    return `<strong style="color: var(--primary); font-size: 1rem;">${translasi}</strong>`;
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    const skor = (d.intensitas !== null && d.intensitas !== undefined) ? d.intensitas : (d.nilai || '-');
+                    let translasi = cekIntensitas(Number(skor));
+                    return `<strong style="color: var(--primary); font-size: 1rem;">${translasi}</strong>`;
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    const skor = (d.fisik !== null && d.fisik !== undefined) ? d.fisik : (d.nilai || '-');
+                    let translasi = cekFisik(Number(skor));
+                    return `<strong style="color: var(--primary); font-size: 1rem;">${translasi}</strong>`;
+                }
+            },
+            { 
+                data: null,
+                render: function(d) {
+                    const skor = (d.mental !== null && d.mental !== undefined) ? d.mental : (d.nilai || '-');
+                    let translasi = cekMental(Number(skor));
+                    return `<strong style="color: var(--primary); font-size: 1rem;">${translasi}</strong>`;
+                }
+            }
         ],
         searching: false,
         lengthChange: false,
@@ -805,10 +1185,146 @@ function renderProfilNilai(id_atlet) {
     });
 }
 
+// ---------------- DASHBOARD ADMIN (SB ADMIN 2 INSPIRED) ----------------
+let adminTeamRadarChart = null;
+
+function renderDashboardAdmin() {
+    const userStr = sessionStorage.getItem('loggedInUser');
+    const user = userStr ? JSON.parse(userStr) : null;
+    if (!user || user.role !== 'pelatih') return;
+
+    // 1. Update nama pelatih di greeting
+    const greetingEl = document.getElementById('dashCoachName');
+    if (greetingEl && user.nama_pelatih) {
+        greetingEl.innerText = user.nama_pelatih;
+    }
+
+    // 2. Total Atlet
+    const totalAtletEl = document.getElementById('dashTotalAtlet');
+    if (totalAtletEl && typeof dataAtlet !== 'undefined') {
+        totalAtletEl.innerText = dataAtlet.length;
+    }
+
+    // 3. Sesi Selesai (latihan dengan nilai)
+    const totalSesiEl = document.getElementById('dashTotalSesi');
+    if (totalSesiEl && typeof dataLatihan !== 'undefined') {
+        const dinilaiCount = dataLatihan.filter(d => d.status !== 'diajukan').length;
+        totalSesiEl.innerText = dinilaiCount;
+    }
+
+    // 4. Pending Evaluasi
+    const pendingEvaluasiEl = document.getElementById('dashPendingEvaluasi');
+    const pendingData = (typeof dataLatihan !== 'undefined') ? dataLatihan.filter(d => d.status === 'diajukan') : [];
+    if (pendingEvaluasiEl) {
+        pendingEvaluasiEl.innerText = pendingData.length;
+    }
+
+    // 5. Countdown Porprov
+    const countdownEl = document.getElementById('dashCountdown');
+    if (countdownEl) {
+        const target = new Date("2026-11-01T08:00:00").getTime();
+        const diff = target - new Date().getTime();
+        const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+        countdownEl.innerText = days;
+    }
+
+    // 6. Render Tabel Mini Antrean Pengajuan Latihan
+    const tableContainer = document.getElementById('dashPendingTableBody');
+    if (tableContainer) {
+        if (pendingData.length === 0) {
+            tableContainer.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-light); padding: 1.8rem;">
+                        🎉 Tidak ada pengajuan latihan yang menunggu evaluasi saat ini. Semua telah dinilai!
+                    </td>
+                </tr>
+            `;
+        } else {
+            tableContainer.innerHTML = pendingData.slice(0, 5).map((row) => {
+                const atlet = dataAtlet.find(a => a.id_atlet === row.id_atlet);
+                const nama = atlet ? atlet.nama_atlet : 'Atlet Unknown';
+                return `
+                    <tr>
+                        <td style="font-weight: 600;">${row.tanggal_latihan || '-'}</td>
+                        <td style="font-weight: 600; color: var(--secondary);">${nama}</td>
+                        <td>${row.materi_latihan || '-'}</td>
+                        <td><span class="badge" style="background: #fef3c7; color: #b45309; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem;">Menunggu</span></td>
+                        <td>
+                            <button class="btn" style="padding: 0.35rem 0.8rem; font-size: 0.8rem; background: var(--primary);" onclick="openPelatihLatihanModal('${row.id_latihan}')">
+                                Evaluasi
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    }
+
+    // 7. Render Team Radar Chart (Soft Tennis Skill Pillars)
+    const ctxRadar = document.getElementById('dashTeamRadarChart');
+    if (ctxRadar) {
+        if (adminTeamRadarChart) {
+            adminTeamRadarChart.destroy();
+        }
+
+        const categories = ['Forehand', 'Backhand', 'Service', 'Volley', 'Slice', 'Fisik'];
+        const values = [4.2, 3.8, 4.0, 3.6, 3.9, 4.5]; // Metrik tim representatif
+
+        adminTeamRadarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: categories,
+                datasets: [
+                    {
+                        label: 'Rata-rata Tim Saat Ini',
+                        data: values,
+                        backgroundColor: 'rgba(78, 115, 223, 0.25)',
+                        borderColor: '#4e73df',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#4e73df',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#4e73df'
+                    },
+                    {
+                        label: 'Target Standar Porprov Emas',
+                        data: [4.8, 4.5, 4.8, 4.5, 4.5, 5.0],
+                        backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                        borderColor: '#1cc88a',
+                        borderWidth: 2,
+                        borderDash: [4, 4],
+                        pointBackgroundColor: '#1cc88a'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#f1f5f9' },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1, backdropColor: 'transparent', font: { size: 10 } }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                }
+            }
+        });
+    }
+
+    updateBadgeNotifEvaluasi();
+}
+
 const originalNavigateTo = navigateTo;
 navigateTo = function(targetId) {
     originalNavigateTo(targetId);
-    if (targetId === 'manajemen-atlet') {
+    if (targetId === 'dashboard-admin') {
+        renderDashboardAdmin();
+    } else if (targetId === 'manajemen-atlet') {
         renderTabelManajemenAtlet();
     } else if (targetId === 'manajemen-nilai') {
         renderTabelManajemenNilai();
@@ -822,3 +1338,87 @@ navigateTo = function(targetId) {
         }
     }
 };
+
+function cekTeknik(int){
+    switch(int){
+        case 5 :
+        return "Pukulan sangat akurat dan konsisten";
+        break;
+        case 4 :
+        return "Pukulan cukup akurat";
+        break;
+        case 3 :
+        return "Pukulan cukup namun kurang konsisten";
+        break;
+        case 2 :
+        return "Pukulan kurang tepat";
+        break;
+        default :
+        return "Pukulan tidak tepat";
+        break;
+    }
+}
+
+function cekFisik(int){
+    switch(int){
+        case 5 :
+        return "Sangat Baik";
+        break;
+        case 4 :
+        return "Baik";
+        break;
+        case 3 :
+        return "Sedang";
+        break;
+        case 2 :
+        return "Kurang";
+        break;
+        default :
+        return "Sangat Kurang";
+        break;
+    }
+}
+
+function cekMental(int){
+    switch(int){
+        case 5 :
+        return "Kondisi Puncak / Prima";
+        break;
+        case 4 :
+        return "Fokus terkontrol";
+        break;
+        case 3 :
+        return "Kurang Fokus";
+        break;
+        case 2 :
+        return "Gelisah / Cemas";
+        break;
+        default :
+        return "Kelelahan Mental";
+        break;
+    }
+}
+
+function cekIntensitas(int){
+    if(int >= 0) {
+        return "Sangat Ringan";
+    }
+    else if (int >= 2) {
+        return "Ringan";
+    }
+    else if (int >= 4) {
+        return "Sedang-Ringan";
+    }
+    else if (int >= 5) {
+        return "Sedang";
+    }
+    else if (int >= 7) {
+        return "Keras";
+    }
+    else if (int >= 8) {
+        return "Sangat Keras";
+    }
+    else if (int >= 10) {
+        return "Maksimal";
+    }
+}
