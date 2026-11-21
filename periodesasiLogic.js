@@ -231,7 +231,8 @@ function renderPeriodesasiTable() {
                     { label: 'Intensity (%)', data: intData, borderColor: 'red', backgroundColor: 'red', tension: 0.3, borderWidth: 3, pointRadius: 0 },
                     { label: 'Phys Prep (%)', data: physData, borderColor: 'green', backgroundColor: 'green', tension: 0.3, borderDash: [5, 5], pointRadius: 0 },
                     { label: 'Tech Prep (%)', data: techData, borderColor: 'orange', backgroundColor: 'orange', tension: 0.3, borderDash: [5, 5], pointRadius: 0 },
-                    { label: 'Tact Prep (%)', data: tactData, borderColor: 'purple', backgroundColor: 'purple', tension: 0.3, borderDash: [5, 5], pointRadius: 0 }
+                    { label: 'Tact Prep (%)', data: tactData, borderColor: 'purple', backgroundColor: 'purple', tension: 0.3, borderDash: [5, 5], pointRadius: 0 },
+                    { label: 'Psych Prep (%)', data: psychData, borderColor: 'teal', backgroundColor: 'teal', tension: 0.3, borderDash: [5, 5], pointRadius: 0 }
                 ]
             },
             options: {
